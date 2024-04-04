@@ -37,15 +37,16 @@ export const ResiumWorld = ({
     <Cesium3DTileset
       url={tilesetUrl}
       projectTo2D
-      // debugShowBoundingVolume
+      debugShowBoundingVolume
       onReady={(newTileset) => {
         // const newCenterCart3 = newTileset.boundingSphere.center
         const newCenterCart3 = placeTilesetOnGround(newTileset)
         viewer?.zoomTo(newTileset, new HeadingPitchRange(0, -0.5, newTileset.boundingSphere.radius * 3))
-        setCenterCart3(newCenterCart3)
+        setCenterCart3(newCenterCart3) // (Optional)
       }}
       onClick={(movement, target) => {
-        console.log('ResiumWorld#Cesium3DTileset#onClick:', movement, target)
+        console.log('ResiumWorld#Cesium3DTileset#onClick: movement:', movement)
+        console.log('ResiumWorld#Cesium3DTileset#onClick: target:', target)
       }}
     />
   )
