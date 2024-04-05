@@ -31,7 +31,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: Top')
+              console.log('ResiumViewCube#onClick: T')
             }}
             >
               T
@@ -42,7 +42,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: West')
+              console.log('ResiumViewCube#onClick: W')
             }}
             >
               W
@@ -53,7 +53,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: South')
+              console.log('ResiumViewCube#onClick: S')
             }}
             >
               S
@@ -64,7 +64,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: East')
+              console.log('ResiumViewCube#onClick: E')
             }}
             >
               E
@@ -75,7 +75,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: North')
+              console.log('ResiumViewCube#onClick: N')
             }}
             >
               N
@@ -86,7 +86,7 @@ export const ResiumViewCube = () => {
             className='side'
           >
             <div onClick={() => {
-              console.log('ResiumViewCube#onClick: Bottom')
+              console.log('ResiumViewCube#onClick: B')
             }}
             >
               B
@@ -99,7 +99,7 @@ export const ResiumViewCube = () => {
             id='edge_ts'
             className='edge'
             onClick={() => {
-              console.log('ResiumViewCube#onClick: TopSouth')
+              console.log('ResiumViewCube#onClick: TS')
             }}
           >
             <div/>
