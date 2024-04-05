@@ -6,7 +6,6 @@ export const ANIM_DURATION = 1
 export const ROT_ANIM_FACTOR = 1
 export const LIGHT_OFFSET = 100
 export const MIN_POLAR_ANGLE_FACTOR = 0.00001
-export const MOUSE_SYNC_DELAY = 200
 export const CAMERA_DISTANCE = 100
 export const USE_R3F_CAMERA = true
 export const CAMERA_NEAR = 0.00001

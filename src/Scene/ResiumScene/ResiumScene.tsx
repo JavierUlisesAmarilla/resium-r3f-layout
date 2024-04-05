@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import '@geoblocks/cesium-view-cube'
 import {CesiumTerrainProvider, Ion, SceneMode} from 'cesium'
-import {useEffect} from 'react'
 import {Viewer} from 'resium'
-import {useZustand} from '../../store/useZustand'
+import {CesiumViewCube} from './CesiumViewCube'
 import {ResiumWorld} from './ResiumWorld'
 
 
@@ -18,16 +15,6 @@ export const ResiumScene = ({
   terrainProvider: CesiumTerrainProvider
   assetId: number
 }) => {
-  const {resiumViewer} = useZustand()
-
-  useEffect(() => {
-    const compass: any = document.querySelector('cesium-view-cube')
-
-    if (compass && resiumViewer) {
-      compass.scene = resiumViewer.scene
-    }
-  }, [resiumViewer])
-
   return (
     <>
       <Viewer
@@ -63,7 +50,7 @@ export const ResiumScene = ({
           assetId={assetId}
         />
       </Viewer>
-      <cesium-view-cube/>
+      <CesiumViewCube/>
     </>
   )
 }
