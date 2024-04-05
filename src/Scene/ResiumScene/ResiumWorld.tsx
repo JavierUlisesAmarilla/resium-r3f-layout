@@ -32,6 +32,7 @@ export const ResiumWorld = ({
       // viewer.scene.screenSpaceCameraController.enableInputs = false
       // viewer.scene.globe.depthTestAgainstTerrain = true // This fixes the 3d tileset flickering issue, but hides the parts of the tileset that are below the ground surface.
       viewer.scene.screenSpaceCameraController.inertiaZoom = 0
+      viewer.scene.screenSpaceCameraController.maximumZoomDistance = 1000
       setResiumViewer(viewer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
