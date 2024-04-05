@@ -30,6 +30,7 @@ export const ResiumWorld = ({
   useEffect(() => {
     if (viewer) {
       // viewer.scene.screenSpaceCameraController.enableInputs = false
+      viewer.scene.screenSpaceCameraController.inertiaZoom = 0
       setResiumViewer(viewer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,7 +40,7 @@ export const ResiumWorld = ({
     <Cesium3DTileset
       url={tilesetUrl}
       projectTo2D
-      debugShowBoundingVolume
+      // debugShowBoundingVolume
       onReady={async (newTileset) => {
         // const newCenterCart3 = newTileset.boundingSphere.center
         const newCenterCart3 = await clampTilesetToTerrain(terrainProvider, newTileset)
