@@ -95,6 +95,7 @@
   position: absolute;
   width: 100%;
   height: 10px;
+  background-color: var(--resium-view-cube-hover-color);
 }
 
 #cube>.edge>div:hover {
@@ -106,7 +107,27 @@
   transform: rotateX(90deg) translateY(-5px) translateZ(5px);
 }
 
+#edge_tw {
+  transform: rotateY(-90deg) translateZ(25px);
+  top: 0;
+}
+
 #edge_ts {
   transform: translateZ(25px);
+  top: 0;
+}
+
+#edge_te {
+  transform: rotateY(90deg) translateZ(25px);
+  top: 0;
+}
+
+#edge_tn {
+  transform: rotateY(180deg) translateZ(25px);
+  top: 0;
+}
+
+#edge_ws {
+  transform: rotateZ(-90deg) translateX(-25px) translateY(-25px) translateZ(25px);
   top: 0;
 }
