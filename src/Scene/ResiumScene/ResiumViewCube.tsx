@@ -169,6 +169,21 @@ export const ResiumViewCube = () => {
             <div/>
           </div>
         </>
+        {/* Vertices */}
+        <>
+          <div
+            id='vertex_tws'
+            className='vertex'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: TWS')
+            }}
+          >
+            <div/>
+            <div/>
+            <div/>
+            TWS
+          </div>
+        </>
       </div>
     </div>
   )

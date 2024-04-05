@@ -4,6 +4,11 @@
   --resium-view-cube-edge-color: #99a8c0dd;
   --resium-view-cube-hover-color: #62789bdd;
   --resium-view-cube-hover-border-color: #e9c664;
+  --resium-view-cube-quarter-length: 25px;
+  --resium-view-cube-quarter-length-reverse: -25px;
+  --resium-view-cube-edge-height: 10px;
+  --resium-view-cube-edge-half-height: 5px;
+  --resium-view-cube-edge-half-height-reverse: -5px;
 }
 
 :host * {
@@ -24,9 +29,9 @@
 }
 
 #cube {
-  width: 50px;
-  height: 50px;
-  top: 25px;
+  width: 50%;
+  height: 50%;
+  top: 25%;
   transform-style: preserve-3d;
   margin: auto;
   position: relative;
@@ -50,8 +55,8 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 60%;
+  height: 60%;
 }
 
 #cube>.side>div:hover {
@@ -60,32 +65,32 @@
 }
 
 #side_t {
-  transform: rotateX(90deg) translateZ(25px);
+  transform: rotateX(90deg) translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #side_w {
-  transform: rotateY(-90deg) translateZ(25px);
+  transform: rotateY(-90deg) translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #side_s {
-  transform: translateZ(25px);
+  transform: translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #side_e {
-  transform: rotateY(90deg) translateZ(25px);
+  transform: rotateY(90deg) translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #side_n {
-  transform: rotateY(180deg) translateZ(25px);
+  transform: rotateY(180deg) translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #side_b {
-  transform: rotateX(-90deg) translateZ(25px);
+  transform: rotateX(-90deg) translateZ(var(--resium-view-cube-quarter-length));
 }
 
 #cube>.edge {
   position: absolute;
-  width: 30px;
+  width: 60%;
   transform-style: preserve-3d;
   margin: auto;
   position: relative;
@@ -95,7 +100,7 @@
 #cube>.edge>div {
   position: absolute;
   width: 100%;
-  height: 10px;
+  height: var(--resium-view-cube-edge-height);
   background-color: var(--resium-view-cube-edge-color);
 }
 
@@ -105,45 +110,45 @@
 }
 
 #cube>.edge>div:first-child {
-  transform: rotateX(90deg) translateY(-5px) translateZ(5px);
+  transform: rotateX(90deg) translateY(var(--resium-view-cube-edge-half-height-reverse)) translateZ(var(--resium-view-cube-edge-half-height));
 }
 
 #edge_tw {
-  transform: translateX(-25px) rotateY(-90deg);
+  transform: translateX(var(--resium-view-cube-quarter-length-reverse)) rotateY(-90deg);
   top: 0;
 }
 
 #edge_ts {
-  transform: translateZ(25px);
+  transform: translateZ(var(--resium-view-cube-quarter-length));
   top: 0;
 }
 
 #edge_te {
-  transform: translateX(25px) rotateY(90deg);
+  transform: translateX(var(--resium-view-cube-quarter-length)) rotateY(90deg);
   top: 0;
 }
 
 #edge_tn {
-  transform: translateZ(-25px) rotateY(180deg);
+  transform: translateZ(var(--resium-view-cube-quarter-length-reverse)) rotateY(180deg);
   top: 0;
 }
 
 #edge_ws {
-  transform: translateX(-25px) translateY(25px) translateZ(25px) rotateZ(-90deg);
+  transform: translateX(var(--resium-view-cube-quarter-length-reverse)) translateY(var(--resium-view-cube-quarter-length)) translateZ(var(--resium-view-cube-quarter-length)) rotateZ(-90deg);
   top: 0;
 }
 
 #edge_se {
-  transform: translateX(25px) translateY(25px) translateZ(25px) rotateZ(90deg);
+  transform: translateX(var(--resium-view-cube-quarter-length)) translateY(var(--resium-view-cube-quarter-length)) translateZ(var(--resium-view-cube-quarter-length)) rotateZ(90deg);
   top: 0;
 }
 
 #edge_en {
-  transform: translateX(25px) translateY(25px) translateZ(-25px) rotateX(90deg) rotateY(90deg);
+  transform: translateX(var(--resium-view-cube-quarter-length)) translateY(var(--resium-view-cube-quarter-length)) translateZ(var(--resium-view-cube-quarter-length-reverse)) rotateX(90deg) rotateY(90deg);
   top: 0;
 }
 
 #edge_nw {
-  transform: translateX(-25px) translateY(25px) translateZ(-25px) rotateZ(90deg) rotateX(180deg);
+  transform: translateX(var(--resium-view-cube-quarter-length-reverse)) translateY(var(--resium-view-cube-quarter-length)) translateZ(var(--resium-view-cube-quarter-length-reverse)) rotateZ(90deg) rotateX(180deg);
   top: 0;
 }
