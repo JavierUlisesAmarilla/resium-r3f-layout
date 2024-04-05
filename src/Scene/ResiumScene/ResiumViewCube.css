@@ -47,9 +47,8 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  width: 80%;
-  height: 80%;
-  cursor: pointer;
+  width: 40px;
+  height: 40px;
   border: 2px solid var(--resium-view-cube-fill-color);
 }
 
@@ -59,7 +58,7 @@
 }
 
 #side_t {
-  transform: rotatex(90deg) translateZ(25px);
+  transform: rotateX(90deg) translateZ(25px);
 }
 
 #side_w {
@@ -80,4 +79,28 @@
 
 #side_b {
   transform: rotateX(-90deg) translateZ(25px);
+}
+
+#cube>.edge {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cube>.edge>div {
+  position: absolute;
+  width: 40px;
+  height: 5px;
+}
+
+#cube>.edge>div:first-child {
+  transform: rotateX(80deg) translateY(-5px);
+  /* background-color: red; */
+}
+
+#edge_ts {
+  transform: translateZ(25px);
+  top: 0;
 }

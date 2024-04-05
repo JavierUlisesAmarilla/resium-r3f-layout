@@ -24,72 +24,88 @@ export const ResiumViewCube = () => {
         ref={cubeRef}
         id='cube'
       >
-        <div
-          id='side_t'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: Top')
-          }}
+        {/* Sides */}
+        <>
+          <div
+            id='side_t'
+            className='side'
           >
-            T
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: Top')
+            }}
+            >
+              T
+            </div>
           </div>
-        </div>
-        <div
-          id='side_w'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: West')
-          }}
+          <div
+            id='side_w'
+            className='side'
           >
-            W
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: West')
+            }}
+            >
+              W
+            </div>
           </div>
-        </div>
-        <div
-          id='side_s'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: South')
-          }}
+          <div
+            id='side_s'
+            className='side'
           >
-            S
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: South')
+            }}
+            >
+              S
+            </div>
           </div>
-        </div>
-        <div
-          id='side_e'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: East')
-          }}
+          <div
+            id='side_e'
+            className='side'
           >
-            E
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: East')
+            }}
+            >
+              E
+            </div>
           </div>
-        </div>
-        <div
-          id='side_n'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: North')
-          }}
+          <div
+            id='side_n'
+            className='side'
           >
-            N
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: North')
+            }}
+            >
+              N
+            </div>
           </div>
-        </div>
-        <div
-          id='side_b'
-          className='side'
-        >
-          <div onClick={() => {
-            console.log('ResiumViewCube#onClick: Bottom')
-          }}
+          <div
+            id='side_b'
+            className='side'
           >
-            B
+            <div onClick={() => {
+              console.log('ResiumViewCube#onClick: Bottom')
+            }}
+            >
+              B
+            </div>
           </div>
-        </div>
+        </>
+        {/* Edges */}
+        <>
+          <div
+            id='edge_ts'
+            className='edge'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: TopSouth')
+            }}
+          >
+            <div/>
+            <div/>
+          </div>
+        </>
       </div>
     </div>
   )
