@@ -1,4 +1,5 @@
-import {Ion, SceneMode} from 'cesium'
+import {CesiumTerrainProvider, Ion, SceneMode, createWorldTerrainAsync} from 'cesium'
+import {useEffect, useState} from 'react'
 import {Viewer} from 'resium'
 import {ResiumWorld} from './ResiumWorld'
 
@@ -12,7 +13,19 @@ export const ResiumScene = ({
 }: {
   assetId: number
 }) => {
-  return (
+  const [terrainProvider, setTerrainProvider] = useState<CesiumTerrainProvider>()
+
+  useEffect(() => {
+    (async () => {
+      const worldTerrain = await createWorldTerrainAsync({
+        requestVertexNormals: true,
+        requestWaterMask: true,
+      })
+      setTerrainProvider(worldTerrain)
+    })()
+  }, [])
+
+  return terrainProvider && (
     <Viewer
       full
       animation={false}
@@ -39,6 +52,7 @@ export const ResiumScene = ({
       blurActiveElementOnCanvasFocus={false}
       requestRenderMode={false}
       sceneMode={SceneMode.SCENE3D}
+      terrainProvider={terrainProvider}
     >
       <ResiumWorld assetId={assetId}/>
     </Viewer>
