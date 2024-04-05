@@ -1,11 +1,13 @@
 import {Cartesian3, Cartographic, Cesium3DTile, Cesium3DTileset, CesiumTerrainProvider, Matrix4, Transforms, sampleTerrainMostDetailed} from 'cesium'
 import {MathUtils, Vector3} from 'three'
 
+
 // Get the Euclidean modulo of angle % 2 * PI.
 export const normalizeAngle = (angle: number) => {
   const TAU = Math.PI * 2
   return MathUtils.euclideanModulo(angle, TAU)
 }
+
 
 // Get angle between line ba and bc.
 export const getAngle = (a: Vector3, b: Vector3, c: Vector3) => {
@@ -14,6 +16,7 @@ export const getAngle = (a: Vector3, b: Vector3, c: Vector3) => {
   const angle = (d1.length() && d2.length()) ? d1.angleTo(d2) : 0
   return angle
 }
+
 
 // Move tileset vertically by earth's surface.
 export const moveTilesetVertically = (tileset: Cesium3DTileset, height: number) => {
@@ -25,6 +28,7 @@ export const moveTilesetVertically = (tileset: Cesium3DTileset, height: number) 
   return surfaceCart3
 }
 
+
 export const getTilesetMinBottomHeight = (rootTile: Cesium3DTile) => {
   let minHeight = Cartographic.fromCartesian(rootTile.boundingSphere.center).height
 
@@ -35,6 +39,7 @@ export const getTilesetMinBottomHeight = (rootTile: Cesium3DTile) => {
   return minHeight
 }
 
+
 // Attach tileset to earth's ground. (This is unnecessary for now)
 export const clampTilesetToTerrain = async (terrainProvider: CesiumTerrainProvider, tileset: Cesium3DTileset) => {
   const cartographic = Cartographic.fromCartesian(tileset.boundingSphere.center)
@@ -44,6 +49,7 @@ export const clampTilesetToTerrain = async (terrainProvider: CesiumTerrainProvid
   return moveTilesetVertically(tileset, cartographic.height - minHeight)
 }
 
+
 // Convert three.js based position to cesium based matrix.
 export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCart3: Cartesian3) => {
   const centerCart3Matrix4 = Transforms.eastNorthUpToFixedFrame(centerCart3)
@@ -52,6 +58,7 @@ export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCart3
   const cesiumMatrix4 = Matrix4.multiply(centerCart3Matrix4, threePositionMatrix4, new Matrix4())
   return cesiumMatrix4
 }
+
 
 // Convert cesium based matrix to three.js based position.
 export const cesiumMatrix4ToThreePosition = (cesiumMatrix4: Matrix4, centerCart3: Cartesian3) => {

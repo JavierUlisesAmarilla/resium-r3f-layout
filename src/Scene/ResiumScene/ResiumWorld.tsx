@@ -30,6 +30,7 @@ export const ResiumWorld = ({
   useEffect(() => {
     if (viewer) {
       // viewer.scene.screenSpaceCameraController.enableInputs = false
+      // viewer.scene.globe.depthTestAgainstTerrain = true // This fixes the 3d tileset flickering issue, but hides the parts of the tileset that are below the ground surface.
       viewer.scene.screenSpaceCameraController.inertiaZoom = 0
       setResiumViewer(viewer)
     }
