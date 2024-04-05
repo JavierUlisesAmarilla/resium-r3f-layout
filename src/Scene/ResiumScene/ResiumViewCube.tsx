@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {useEffect, useRef} from 'react'
 import {useZustand} from '../../store/useZustand'
 import './ResiumViewCube.css'
@@ -23,32 +25,50 @@ export const ResiumViewCube = () => {
         id="cube"
       >
         <div id="side_t">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: Top')
+          }}
+          >
             Top
           </div>
         </div>
         <div id="side_w">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: West')
+          }}
+          >
             West
           </div>
         </div>
         <div id="side_s">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: South')
+          }}
+          >
             South
           </div>
         </div>
         <div id="side_e">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: East')
+          }}
+          >
             East
           </div>
         </div>
         <div id="side_n">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: North')
+          }}
+          >
             North
           </div>
         </div>
         <div id="side_b">
-          <div>
+          <div onClick={() => {
+            console.log('ResiumViewCube#onClick: Bottom')
+          }}
+          >
             Bottom
           </div>
         </div>
