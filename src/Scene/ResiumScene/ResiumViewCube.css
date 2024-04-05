@@ -28,7 +28,7 @@
   will-change: transform;
 }
 
-#cube>div {
+#cube>.side {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +40,7 @@
   border: 1px solid var(--resium-view-cube-stroke-color);
 }
 
-#cube>div>div {
+#cube>.side>div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,7 +51,7 @@
   border: 2px solid var(--resium-view-cube-fill-color);
 }
 
-#cube>div>div:hover {
+#cube>.side>div:hover {
   background-color: #62789b;
   border-color: #e9c664;
 }

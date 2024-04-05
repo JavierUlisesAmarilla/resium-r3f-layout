@@ -19,12 +19,15 @@ export const ResiumViewCube = () => {
   }, [resiumViewer])
 
   return (
-    <div id="wrapper">
+    <div id='wrapper'>
       <div
         ref={cubeRef}
-        id="cube"
+        id='cube'
       >
-        <div id="side_t">
+        <div
+          id='side_t'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: Top')
           }}
@@ -32,7 +35,10 @@ export const ResiumViewCube = () => {
             Top
           </div>
         </div>
-        <div id="side_w">
+        <div
+          id='side_w'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: West')
           }}
@@ -40,7 +46,10 @@ export const ResiumViewCube = () => {
             West
           </div>
         </div>
-        <div id="side_s">
+        <div
+          id='side_s'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: South')
           }}
@@ -48,7 +57,10 @@ export const ResiumViewCube = () => {
             South
           </div>
         </div>
-        <div id="side_e">
+        <div
+          id='side_e'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: East')
           }}
@@ -56,7 +68,10 @@ export const ResiumViewCube = () => {
             East
           </div>
         </div>
-        <div id="side_n">
+        <div
+          id='side_n'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: North')
           }}
@@ -64,7 +79,10 @@ export const ResiumViewCube = () => {
             North
           </div>
         </div>
-        <div id="side_b">
+        <div
+          id='side_b'
+          className='side'
+        >
           <div onClick={() => {
             console.log('ResiumViewCube#onClick: Bottom')
           }}
