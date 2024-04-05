@@ -1,6 +1,7 @@
 :root {
   --resium-view-cube-stroke-color: #646d79;
   --resium-view-cube-fill-color: #bbc5cfdd;
+  --resium-view-cube-edge-color: #99a8c0dd;
   --resium-view-cube-hover-color: #62789bdd;
   --resium-view-cube-hover-border-color: #e9c664;
 }
@@ -95,7 +96,7 @@
   position: absolute;
   width: 100%;
   height: 10px;
-  background-color: var(--resium-view-cube-hover-color);
+  background-color: var(--resium-view-cube-edge-color);
 }
 
 #cube>.edge>div:hover {
@@ -144,25 +145,5 @@
 
 #edge_nw {
   transform: translateX(-25px) translateY(25px) translateZ(-25px) rotateZ(90deg) rotateX(180deg);
-  top: 0;
-}
-
-#edge_bw {
-  transform: translateX(-25px) translateY(50px) rotateY(-90deg) rotateX(-90deg);
-  top: 0;
-}
-
-#edge_bs {
-  transform: translateY(50px) translateZ(25px) rotateX(-90deg);
-  top: 0;
-}
-
-#edge_be {
-  transform: translateX(25px) translateY(50px) rotateY(-90deg) rotateX(180deg);
-  top: 0;
-}
-
-#edge_bn {
-  transform: translateY(50px) translateZ(-25px) rotateX(180deg);
   top: 0;
 }
