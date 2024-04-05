@@ -1,5 +1,4 @@
-import {CesiumTerrainProvider, Ion, SceneMode, createWorldTerrainAsync} from 'cesium'
-import {useEffect, useState} from 'react'
+import {CesiumTerrainProvider, Ion, SceneMode} from 'cesium'
 import {Viewer} from 'resium'
 import {ResiumWorld} from './ResiumWorld'
 
@@ -9,23 +8,13 @@ Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0YmZhM
 
 
 export const ResiumScene = ({
+  terrainProvider,
   assetId,
 }: {
+  terrainProvider: CesiumTerrainProvider
   assetId: number
 }) => {
-  const [terrainProvider, setTerrainProvider] = useState<CesiumTerrainProvider>()
-
-  useEffect(() => {
-    (async () => {
-      const worldTerrain = await createWorldTerrainAsync({
-        requestVertexNormals: true,
-        requestWaterMask: true,
-      })
-      setTerrainProvider(worldTerrain)
-    })()
-  }, [])
-
-  return terrainProvider && (
+  return (
     <Viewer
       full
       animation={false}
@@ -54,7 +43,10 @@ export const ResiumScene = ({
       sceneMode={SceneMode.SCENE3D}
       terrainProvider={terrainProvider}
     >
-      <ResiumWorld assetId={assetId}/>
+      <ResiumWorld
+        terrainProvider={terrainProvider}
+        assetId={assetId}
+      />
     </Viewer>
   )
 }

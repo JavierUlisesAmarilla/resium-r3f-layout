@@ -1,4 +1,4 @@
-import {Cartesian3, Cartographic, Cesium3DTile, Cesium3DTileset, Matrix4, Transforms} from 'cesium'
+import {Cartesian3, Cartographic, Cesium3DTile, Cesium3DTileset, CesiumTerrainProvider, Matrix4, Transforms, sampleTerrainMostDetailed} from 'cesium'
 import {MathUtils, Vector3} from 'three'
 
 // Get the Euclidean modulo of angle % 2 * PI.
@@ -36,9 +36,12 @@ export const getTilesetMinBottomHeight = (rootTile: Cesium3DTile) => {
 }
 
 // Attach tileset to earth's ground. (This is unnecessary for now)
-export const placeTilesetOnGround = (tileset: Cesium3DTileset) => {
+export const clampTilesetToTerrain = async (terrainProvider: CesiumTerrainProvider, tileset: Cesium3DTileset) => {
+  const cartographic = Cartographic.fromCartesian(tileset.boundingSphere.center)
+  cartographic.height = 0
+  await sampleTerrainMostDetailed(terrainProvider, [cartographic])
   const minHeight = getTilesetMinBottomHeight(tileset.root)
-  return moveTilesetVertically(tileset, -minHeight)
+  return moveTilesetVertically(tileset, cartographic.height - minHeight)
 }
 
 // Convert three.js based position to cesium based matrix.
