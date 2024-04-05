@@ -46,3 +46,13 @@ body,
 .peni {
   pointer-events: none !important;
 }
+
+cesium-view-cube {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  font-family: monospace;
+  font-weight: bold;
+  --cesium-view-cube-stroke-color: rgb(0, 0, 0);
+  --cesium-view-cube-fill-color: rgb(255, 255, 255);
+}

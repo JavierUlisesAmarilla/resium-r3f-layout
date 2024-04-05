@@ -45,7 +45,7 @@ export const ResiumWorld = ({
       onReady={async (newTileset) => {
         // const newCenterCart3 = newTileset.boundingSphere.center
         const newCenterCart3 = await clampTilesetToTerrain(terrainProvider, newTileset)
-        viewer?.zoomTo(newTileset, new HeadingPitchRange(0, -0.5, newTileset.boundingSphere.radius * 3))
+        viewer?.zoomTo(newTileset, new HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
         setCenterCart3(newCenterCart3) // (Optional)
       }}
       onClick={(movement, target) => {
