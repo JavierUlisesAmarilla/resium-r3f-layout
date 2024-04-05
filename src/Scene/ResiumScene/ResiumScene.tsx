@@ -1,6 +1,6 @@
 import {CesiumTerrainProvider, Ion, SceneMode} from 'cesium'
 import {Viewer} from 'resium'
-import {CesiumViewCube} from './CesiumViewCube'
+import {ResiumViewCube} from './ResiumViewCube'
 import {ResiumWorld} from './ResiumWorld'
 
 
@@ -50,7 +50,7 @@ export const ResiumScene = ({
           assetId={assetId}
         />
       </Viewer>
-      <CesiumViewCube/>
+      <ResiumViewCube/>
     </>
   )
 }
