@@ -99,7 +99,7 @@
   background-color: var(--resium-view-cube-edge-color);
 }
 
-#cube>.edge>div:hover {
+#cube>.edge:has(:hover)>div {
   background-color: var(--resium-view-cube-hover-color);
   border: 2px solid var(--resium-view-cube-hover-border-color);
 }
