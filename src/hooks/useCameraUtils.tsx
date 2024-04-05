@@ -1,41 +1,26 @@
-import {DebugModelMatrixPrimitive, HeadingPitchRange, OrthographicFrustum, PerspectiveFrustum, Transforms} from 'cesium'
+import {Cartesian3, DebugModelMatrixPrimitive, HeadingPitchRange, Matrix4, OrthographicFrustum, PerspectiveFrustum, Transforms} from 'cesium'
 import gsap from 'gsap'
-import {useEffect} from 'react'
+import {useCallback, useEffect} from 'react'
 import {Box3, MathUtils, Mesh, OrthographicCamera, PerspectiveCamera, Vector3} from 'three'
 import {useZustand} from '../store/useZustand'
-import {getAngle, normalizeAngle, offsetVec3ToCart3} from '../utils/common'
-import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, ROT_ANIM_FACTOR, SHOW_AXES_HELPER} from '../utils/constants'
+import {cesiumMatrix4ToThreePosition, getAngle, normalizeAngle, threePositionToCesiumMatrix4} from '../utils/common'
+import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_DISTANCE, CAMERA_NEAR, ROT_ANIM_FACTOR, SHOW_AXES_HELPER, USE_R3F_CAMERA} from '../utils/constants'
 
 
-let axesHelper: DebugModelMatrixPrimitive | undefined
+let resiumAxesHelpers: {[key: string]: DebugModelMatrixPrimitive} = {}
 const box3 = new Box3()
-const vec3 = new Vector3()
+const vector3 = new Vector3()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, preventAllEvent, setPreventAllEvent, r3fControlsRef, centerCart3, r3fCamera} = useZustand()
+  const {resiumViewer, r3fControlsRef, r3fCamera, centerCart3, areAllEventsOnLockdown, setAreAllEventsOnLockdown} = useZustand()
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
+  const r3fControls = r3fControlsRef?.current
 
-  useEffect(() => {
-    return () => {
-      if (axesHelper) {
-        resiumViewer?.scene.primitives.remove(axesHelper)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (centerCart3) {
-      syncCesium()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [centerCart3])
-
-  const syncFov = () => {
+  // Synchronize field of view of r3f camera to cesium camera.
+  const syncFieldOfView = useCallback(() => {
     if (r3fCamera && resiumCamera) {
-      // Sync frustum
       if (r3fCamera instanceof PerspectiveCamera) {
         if (!(resiumCamera.frustum instanceof PerspectiveFrustum)) {
           resiumCamera.switchToPerspectiveFrustum()
@@ -45,9 +30,10 @@ export const useCameraUtils = () => {
         const r3fCameraFov = r3fCamera.fov
         const resiumCameraFrustum = resiumCamera.frustum as PerspectiveFrustum
 
-        if (r3fCameraAspect < 1) {
+        // R3f camera's field of view is actual angle, not radians. So need to convert it to radians to synchronize with Resium camera.
+        if (r3fCameraAspect < 1) { // When portrait mode
           resiumCameraFrustum.fov = Math.PI * (r3fCameraFov / 180)
-        } else {
+        } else { // When landscape mode
           const resiumFovY = Math.PI * (r3fCameraFov / 180)
           const resiumFovX = Math.atan(Math.tan(0.5 * resiumFovY) * r3fCameraAspect) * 2
           resiumCameraFrustum.fov = resiumFovX
@@ -57,81 +43,183 @@ export const useCameraUtils = () => {
           resiumCamera.switchToOrthographicFrustum()
         }
 
+        // This is experimental yet.
         const resiumOrhtoFrustum = resiumCamera.frustum as OrthographicFrustum
         resiumOrhtoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
         resiumOrhtoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
       }
     }
-  }
+  }, [r3fCamera, resiumCamera])
 
-  const syncCesium = () => {
-    if (resiumScene && resiumCamera && r3fControlsRef?.current && r3fCamera && centerCart3) {
-      syncFov()
-      const r3fCameraTarget = r3fControlsRef.current.target
-      const resiumCameraCart3Target = offsetVec3ToCart3(centerCart3, r3fCameraTarget)
-      const resiumCameraCart3TargetMatrix4 = Transforms.eastNorthUpToFixedFrame(resiumCameraCart3Target)
-      const heading = normalizeAngle(-1 * r3fControlsRef.current.getAzimuthalAngle())
-      const pitch = r3fControlsRef.current.getPolarAngle() - MathUtils.degToRad(90)
-      const range = r3fControlsRef.current.getDistance()
-      resiumCamera.lookAtTransform(resiumCameraCart3TargetMatrix4, new HeadingPitchRange(heading, pitch, range))
-
-      // Axes helper
+  // Show axes helper for convenient development. (optional)
+  const devUpdateResiumAxesHelper = useCallback((key: string, modelMatrix: Matrix4) => {
+    if (resiumScene) {
       if (SHOW_AXES_HELPER) {
-        if (!axesHelper) {
-          axesHelper = new DebugModelMatrixPrimitive({modelMatrix: resiumCameraCart3TargetMatrix4, length: AXES_LENGTH})
-          resiumViewer.scene.primitives.add(axesHelper)
+        if (resiumAxesHelpers[key]) {
+          resiumAxesHelpers[key].modelMatrix = modelMatrix
         } else {
-          axesHelper.modelMatrix = resiumCameraCart3TargetMatrix4
+          resiumAxesHelpers[key] = new DebugModelMatrixPrimitive({modelMatrix, length: AXES_LENGTH})
+          resiumScene.primitives.add(resiumAxesHelpers[key])
         }
-      } else if (axesHelper) {
-        resiumViewer.scene.primitives.remove(axesHelper)
-        axesHelper = undefined
+      } else if (resiumAxesHelpers) {
+        Object.values(resiumAxesHelpers).forEach((resiumAxesHelper) => {
+          resiumScene.primitives.remove(resiumAxesHelper)
+        })
+        resiumAxesHelpers = {}
       }
+    }
+  }, [resiumScene])
+
+  // Synchronize r3f camera to cesium camera.
+  const syncR3fToCesium = useCallback(() => {
+    if (resiumCamera && r3fControls && centerCart3) {
+      syncFieldOfView()
+      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCart3)
+      const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
+      const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
+      const range = r3fControls.getDistance()
+      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new HeadingPitchRange(heading, pitch, range))
+      devUpdateResiumAxesHelper('centerCart3', Transforms.eastNorthUpToFixedFrame(centerCart3))
+    }
+  }, [centerCart3, r3fControls, resiumCamera, syncFieldOfView, devUpdateResiumAxesHelper])
+
+  // Synchronize cesium camera to r3f camera.
+  const syncCesiumToR3f = (targetCart3: Cartesian3) => {
+    if (resiumCamera && centerCart3 && r3fControls && r3fCamera) {
+      syncFieldOfView()
+      const resiumCameraPosition = cesiumMatrix4ToThreePosition(Transforms.eastNorthUpToFixedFrame(resiumCamera.positionWC), centerCart3)
+      r3fCamera.position.copy(resiumCameraPosition)
+      const targetPosition = cesiumMatrix4ToThreePosition(Transforms.eastNorthUpToFixedFrame(targetCart3), centerCart3)
+      r3fControls.target.copy(targetPosition)
     }
   }
 
-  const animLookAt = async (target: Vector3) => {
-    if (r3fControlsRef?.current && !preventAllEvent && r3fCamera) {
-      setPreventAllEvent(true)
-      const angleTo = getAngle(r3fControlsRef.current.target, r3fCamera.position, target)
-      await gsap.timeline().to(r3fControlsRef.current.target, {
+  // Make r3f camera look at the given target smoothly with animation.
+  const animateR3fLookAt = async (target: Vector3) => {
+    if (r3fControls && !areAllEventsOnLockdown && r3fCamera) {
+      setAreAllEventsOnLockdown(true)
+      const angleTo = getAngle(r3fControls.target, r3fCamera.position, target)
+      await gsap.timeline().to(r3fControls.target, {
         x: target.x,
         y: target.y,
         z: target.z,
         duration: angleTo > Math.PI * ANGLE_TOLERANCE_FACTOR ? ANIM_DURATION * ROT_ANIM_FACTOR : 0,
       })
-      setPreventAllEvent(false)
+      setAreAllEventsOnLockdown(false)
     }
   }
 
-  const animCloseToObj = async (obj: Mesh) => {
-    if (obj) {
-      box3.setFromObject(obj)
-      const maxSize = (box3.max.x - box3.min.x + box3.max.y - box3.min.y + box3.max.z - box3.min.z) / 2
-      obj.getWorldPosition(vec3)
-      await animMoveToTarget(vec3, maxSize)
-    }
+  // Move and rotate r3f camera to zoom the given object max smoothly with animation.
+  const animateR3fZoomInOn = async (obj: Mesh) => {
+    box3.setFromObject(obj)
+    const maxSize = (box3.max.x - box3.min.x + box3.max.y - box3.min.y + box3.max.z - box3.min.z) / 2
+    obj.getWorldPosition(vector3)
+    await animateR3fZoomToTarget(vector3, maxSize)
   }
 
-  const animMoveToTarget = async (target: Vector3, zoomDistance: number = 0) => {
-    await animLookAt(target)
+  // Move r3f camera to the given position smoothly with animation.
+  const animateR3fZoomToTarget = async (target: Vector3, zoomDistance = 0) => {
+    await animateR3fLookAt(target)
 
-    if (!preventAllEvent && r3fCamera) {
-      setPreventAllEvent(true)
-      const direc = target.sub(r3fCamera.position)
-      const direcLen = direc.length()
-      const scale = (direcLen - zoomDistance) / direcLen
-      direc.multiplyScalar(scale)
-      const moveTarget = r3fCamera.position.clone().add(direc)
+    if (!areAllEventsOnLockdown && r3fCamera) {
+      setAreAllEventsOnLockdown(true)
+      const direction = target.sub(r3fCamera.position)
+      const directionLength = direction.length()
+      const scale = (directionLength - zoomDistance) / directionLength
+      direction.multiplyScalar(scale)
+      const moveTarget = r3fCamera.position.clone().add(direction)
       await gsap.timeline().to(r3fCamera.position, {
         x: moveTarget.x,
         y: moveTarget.y,
         z: moveTarget.z,
         duration: ANIM_DURATION,
       })
-      setPreventAllEvent(false)
+      setAreAllEventsOnLockdown(false)
     }
   }
 
-  return {syncCesium, animLookAt, animCloseToObj, animMoveToTarget}
+  // Move r3f camera to the initial position smoothly with animation.
+  const animateR3fMoveToDefaultPosition = async () => {
+    await animateR3fLookAt(new Vector3(0, 0, 0))
+
+    if (!areAllEventsOnLockdown && r3fCamera) {
+      setAreAllEventsOnLockdown(true)
+      await gsap.timeline().to(r3fCamera.position, {
+        x: CAMERA_DISTANCE,
+        y: CAMERA_DISTANCE,
+        z: CAMERA_DISTANCE,
+        duration: ANIM_DURATION,
+      })
+      setAreAllEventsOnLockdown(false)
+    }
+  }
+
+  // Make cesium camera fly to the given entity and synchronize to r3f camera.
+  const flyResiumCameraTo = async (entityId: string) => {
+    if (!resiumViewer) {
+      return
+    }
+
+    const entity = resiumViewer.entities.getById(entityId)
+    console.log('useCameraUtils#flyResiumCameraTo: entity:', entity)
+
+    if (!entity) {
+      return
+    }
+
+    /* Start to set target and HeadingPitchRange */
+    let targetCart3 = new Cartesian3()
+    const headingPitchRange = new HeadingPitchRange()
+
+    if (entity.polyline) {
+      const cart3Arr = entity.polyline.positions?.getValue(resiumViewer.clock.currentTime)
+      // Target
+      const cart3Sum = Cartesian3.add(cart3Arr[0], cart3Arr[1], new Cartesian3())
+      Cartesian3.divideByScalar(cart3Sum, 2, targetCart3)
+    } else {
+      const newTargetCart3 = entity.position?.getValue(resiumViewer.clock.currentTime)
+
+      if (newTargetCart3) {
+        targetCart3 = newTargetCart3
+      }
+    }
+    /* End to set target and HeadingPitchRange */
+
+    const flyToRes = await resiumViewer.flyTo(entity, {offset: headingPitchRange})
+
+    if (flyToRes) {
+      syncCesiumToR3f(targetCart3)
+      resiumViewer.scene.screenSpaceCameraController.enableInputs = !USE_R3F_CAMERA
+    }
+  }
+
+  // Zoom in or out r3f camera and synchronize to cesium camera.
+  const zoomR3f = (factor: number) => {
+    if (r3fControls && r3fCamera) {
+      const direction = r3fControls.target.clone().sub(r3fCamera.position).multiplyScalar(factor)
+      r3fCamera.position.add(direction)
+      syncR3fToCesium()
+    }
+  }
+
+  useEffect(() => {
+    if (centerCart3) {
+      if (resiumCamera?.frustum) {
+        resiumCamera.frustum.near = CAMERA_NEAR
+      }
+
+      syncR3fToCesium()
+    }
+  }, [centerCart3, resiumCamera?.frustum, syncR3fToCesium])
+
+  return {
+    animateR3fLookAt,
+    animateR3fZoomInOn,
+    animateR3fZoomToTarget,
+    animateR3fMoveToDefaultPosition,
+    syncR3fToCesium,
+    syncCesiumToR3f,
+    flyResiumCameraTo,
+    zoomR3f,
+  }
 }

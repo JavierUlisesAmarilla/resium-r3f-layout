@@ -9,10 +9,10 @@ let timeout: any
 
 export const R3fGizmoHelper = () => {
   const {selR3fObj} = useZustand()
-  const {animCloseToObj} = useCameraUtils()
+  const {animateR3fZoomInOn} = useCameraUtils()
 
   const closeToSelObj = () => {
-    animCloseToObj(selR3fObj)
+    animateR3fZoomInOn(selR3fObj)
   }
 
   const onUpdateEnd = () => {

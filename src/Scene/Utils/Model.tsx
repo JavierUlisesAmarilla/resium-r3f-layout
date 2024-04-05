@@ -62,16 +62,16 @@ export const Model = ({
   const rigidBodyRef = useRef<RapierRigidBody>(null)
   const groupRef = useRef<THREE.Group>(null)
   const {camera} = useThree()
-  const {preventAllEvent} = useZustand()
+  const {areAllEventsOnLockdown} = useZustand()
   const {modelScene, mixer, actions} = useCustomGltf(modelPath, useCloneGltf)
-  const {animMoveToTarget} = useCameraUtils()
+  const {animateR3fZoomToTarget} = useCameraUtils()
   const realModelScale = modelScale || 1
 
   const bind = useGesture({
     onPointerDown: (state) => {
       const {event} = state
 
-      if (event.button === 0 && enableZoom && !preventAllEvent && rigidBodyRef.current && groupRef.current) { // Left
+      if (event.button === 0 && enableZoom && !areAllEventsOnLockdown && rigidBodyRef.current && groupRef.current) { // Left
         if (usePhysics) {
           worldPos.copy(vec3(rigidBodyRef.current.translation()))
         } else {
@@ -83,7 +83,7 @@ export const Model = ({
         if (distance > zoomDistance) {
           const direc = worldPos.clone().sub(camera.position).multiplyScalar((distance - (zoomDistance * 0.9)) / distance)
           const cameraTarget = camera.position.clone().add(direc)
-          animMoveToTarget(cameraTarget)
+          animateR3fZoomToTarget(cameraTarget)
         }
       }
     },

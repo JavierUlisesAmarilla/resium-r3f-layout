@@ -1,4 +1,3 @@
-
 /* eslint-disable react/no-unknown-property */
 import {Edges, TransformControls} from '@react-three/drei'
 import {useControls} from 'leva'
@@ -16,7 +15,7 @@ export const CubeSelector = () => {
   const cuebRef = useRef<Mesh>(null)
   const {selR3fObj, setSelR3fObj} = useZustand()
   const [isSelected, setIsSelected] = useState(false)
-  const {animLookAt} = useCameraUtils()
+  const {animateR3fLookAt} = useCameraUtils()
   const {transformMode} = useControls(controls)
   const mode = transformMode as 'translate' | 'rotate' | 'scale'
 
@@ -26,7 +25,7 @@ export const CubeSelector = () => {
       setIsSelected(false)
     } else if (cuebRef.current) {
       cuebRef.current.getWorldPosition(vec3)
-      animLookAt(vec3)
+      animateR3fLookAt(vec3)
       setSelR3fObj(cuebRef.current)
       setIsSelected(true)
     }
