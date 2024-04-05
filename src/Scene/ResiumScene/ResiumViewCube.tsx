@@ -22,12 +22,36 @@ export const ResiumViewCube = () => {
         ref={cubeRef}
         id="cube"
       >
-        <div id="side_t">Top</div>
-        <div id="side_w">West</div>
-        <div id="side_s">South</div>
-        <div id="side_e">East</div>
-        <div id="side_n">North</div>
-        <div id="side_b">Bottom</div>
+        <div id="side_t">
+          <div>
+            Top
+          </div>
+        </div>
+        <div id="side_w">
+          <div>
+            West
+          </div>
+        </div>
+        <div id="side_s">
+          <div>
+            South
+          </div>
+        </div>
+        <div id="side_e">
+          <div>
+            East
+          </div>
+        </div>
+        <div id="side_n">
+          <div>
+            North
+          </div>
+        </div>
+        <div id="side_b">
+          <div>
+            Bottom
+          </div>
+        </div>
       </div>
     </div>
   )
