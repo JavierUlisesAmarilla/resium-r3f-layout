@@ -32,7 +32,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: Top')
           }}
           >
-            Top
+            T
           </div>
         </div>
         <div
@@ -43,7 +43,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: West')
           }}
           >
-            West
+            W
           </div>
         </div>
         <div
@@ -54,7 +54,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: South')
           }}
           >
-            South
+            S
           </div>
         </div>
         <div
@@ -65,7 +65,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: East')
           }}
           >
-            East
+            E
           </div>
         </div>
         <div
@@ -76,7 +76,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: North')
           }}
           >
-            North
+            N
           </div>
         </div>
         <div
@@ -87,7 +87,7 @@ export const ResiumViewCube = () => {
             console.log('ResiumViewCube#onClick: Bottom')
           }}
           >
-            Bottom
+            B
           </div>
         </div>
       </div>
