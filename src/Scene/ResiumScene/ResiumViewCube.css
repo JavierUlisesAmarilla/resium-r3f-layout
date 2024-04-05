@@ -146,3 +146,23 @@
   transform: translateX(-25px) translateY(25px) translateZ(-25px) rotateZ(90deg) rotateX(180deg);
   top: 0;
 }
+
+#edge_bw {
+  transform: translateX(-25px) translateY(50px) rotateY(-90deg) rotateX(-90deg);
+  top: 0;
+}
+
+#edge_bs {
+  transform: translateY(50px) translateZ(25px) rotateX(-90deg);
+  top: 0;
+}
+
+#edge_be {
+  transform: translateX(25px) translateY(50px) rotateY(-90deg) rotateX(180deg);
+  top: 0;
+}
+
+#edge_bn {
+  transform: translateY(50px) translateZ(-25px) rotateX(180deg);
+  top: 0;
+}

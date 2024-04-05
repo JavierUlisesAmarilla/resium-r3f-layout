@@ -175,6 +175,46 @@ export const ResiumViewCube = () => {
             <div/>
             <div/>
           </div>
+          <div
+            id='edge_bw'
+            className='edge'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: BW')
+            }}
+          >
+            <div/>
+            <div/>
+          </div>
+          <div
+            id='edge_bs'
+            className='edge'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: BS')
+            }}
+          >
+            <div/>
+            <div/>
+          </div>
+          <div
+            id='edge_be'
+            className='edge'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: BE')
+            }}
+          >
+            <div/>
+            <div/>
+          </div>
+          <div
+            id='edge_bn'
+            className='edge'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: BN')
+            }}
+          >
+            <div/>
+            <div/>
+          </div>
         </>
       </div>
     </div>
