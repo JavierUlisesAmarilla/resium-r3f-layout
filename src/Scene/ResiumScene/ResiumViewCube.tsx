@@ -193,6 +193,28 @@ export const ResiumViewCube = () => {
             <div/>
             <div/>
           </div>
+          <div
+            id='vertex_ten'
+            className='vertex'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: TEN')
+            }}
+          >
+            <div/>
+            <div/>
+            <div/>
+          </div>
+          <div
+            id='vertex_tnw'
+            className='vertex'
+            onClick={() => {
+              console.log('ResiumViewCube#onClick: TNW')
+            }}
+          >
+            <div/>
+            <div/>
+            <div/>
+          </div>
         </>
       </div>
     </div>

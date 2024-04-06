@@ -165,7 +165,6 @@
   left: 0;
   width: var(--resium-view-cube-edge-height);
   height: var(--resium-view-cube-edge-height);
-  background-color: rgba(0, 128, 0, 0.5);
 }
 
 #cube>.vertex>div:nth-child(1) {
@@ -187,4 +186,12 @@
 
 #vertex_tse {
   transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-quarter-size)) rotateY(90deg);
+}
+
+#vertex_ten {
+  transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-quarter-negative-size)) rotateY(180deg);
+}
+
+#vertex_tnw {
+  transform: translateZ(var(--resium-view-cube-quarter-negative-size)) rotateY(-90deg);
 }
