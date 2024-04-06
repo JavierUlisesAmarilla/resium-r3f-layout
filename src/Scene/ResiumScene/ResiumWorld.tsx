@@ -16,7 +16,7 @@ export const ResiumWorld = ({
   assetId: number
 }) => {
   const {viewer} = useCesium()
-  const {setResiumViewer, setCenterCart3} = useZustand()
+  const {setResiumViewer, setCenterCart3, setTileset} = useZustand()
   const [tilesetUrl, setTilesetUrl] = useState<Promise<IonResource>>()
 
   useEffect(() => {
@@ -44,9 +44,9 @@ export const ResiumWorld = ({
       projectTo2D
       // debugShowBoundingVolume
       onReady={async (newTileset) => {
-        // const newCenterCart3 = newTileset.boundingSphere.center
         const newCenterCart3 = await clampTilesetToTerrain(terrainProvider, newTileset)
         viewer?.zoomTo(newTileset, new HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
+        setTileset(newTileset)
         setCenterCart3(newCenterCart3) // (Optional)
       }}
       onClick={(movement, target) => {

@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import {HeadingPitchRange} from 'cesium'
 import {useEffect, useRef} from 'react'
 import {useZustand} from '../../store/useZustand'
 import './ResiumViewCube.css'
@@ -7,7 +8,16 @@ import './ResiumViewCube.css'
 
 export const ResiumViewCube = () => {
   const cubeRef = useRef<HTMLDivElement>(null)
-  const {resiumViewer} = useZustand()
+  const {resiumViewer, tileset} = useZustand()
+
+  const flyResiumCameraTo = (heading = 0, pitch = 0) => {
+    if (!resiumViewer || !tileset) {
+      return
+    }
+
+    const range = tileset.boundingSphere.radius * 2
+    resiumViewer.flyTo(tileset, {offset: new HeadingPitchRange(heading, pitch, range)})
+  }
 
   useEffect(() => {
     resiumViewer?.scene.postRender.addEventListener(() => {
@@ -30,56 +40,31 @@ export const ResiumViewCube = () => {
             id='side_t'
             className='side'
           >
-            <div onClick={() => {
-              console.log('ResiumViewCube#onClick: T')
-            }}
-            >
-              T
-            </div>
+            <div onClick={() => flyResiumCameraTo(0, -Math.PI / 2)}>T</div>
           </div>
           <div
             id='side_w'
             className='side'
           >
-            <div onClick={() => {
-              console.log('ResiumViewCube#onClick: W')
-            }}
-            >
-              W
-            </div>
+            <div onClick={() => flyResiumCameraTo(Math.PI / 2)}>W</div>
           </div>
           <div
             id='side_s'
             className='side'
           >
-            <div onClick={() => {
-              console.log('ResiumViewCube#onClick: S')
-            }}
-            >
-              S
-            </div>
+            <div onClick={() => flyResiumCameraTo()}>S</div>
           </div>
           <div
             id='side_e'
             className='side'
           >
-            <div onClick={() => {
-              console.log('ResiumViewCube#onClick: E')
-            }}
-            >
-              E
-            </div>
+            <div onClick={() => flyResiumCameraTo(-Math.PI / 2)}>E</div>
           </div>
           <div
             id='side_n'
             className='side'
           >
-            <div onClick={() => {
-              console.log('ResiumViewCube#onClick: N')
-            }}
-            >
-              N
-            </div>
+            <div onClick={() => flyResiumCameraTo(Math.PI)}>N</div>
           </div>
           <div
             id='side_b'
@@ -91,9 +76,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_tw'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TW')
-            }}
+            onClick={() => flyResiumCameraTo(Math.PI / 2, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -101,9 +84,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_ts'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TS')
-            }}
+            onClick={() => flyResiumCameraTo(0, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -111,9 +92,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_te'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TE')
-            }}
+            onClick={() => flyResiumCameraTo(-Math.PI / 2, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -121,9 +100,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_tn'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TN')
-            }}
+            onClick={() => flyResiumCameraTo(Math.PI, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -131,9 +108,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_ws'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: WS')
-            }}
+            onClick={() => flyResiumCameraTo(Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -141,9 +116,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_se'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: SE')
-            }}
+            onClick={() => flyResiumCameraTo(-Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -151,9 +124,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_en'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: EN')
-            }}
+            onClick={() => flyResiumCameraTo(-3 * Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -161,9 +132,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_nw'
             className='edge'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: NW')
-            }}
+            onClick={() => flyResiumCameraTo(3 * Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -174,9 +143,7 @@ export const ResiumViewCube = () => {
           <div
             id='vertex_tws'
             className='vertex'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TWS')
-            }}
+            onClick={() => flyResiumCameraTo(Math.PI / 4, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -185,9 +152,7 @@ export const ResiumViewCube = () => {
           <div
             id='vertex_tse'
             className='vertex'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TSE')
-            }}
+            onClick={() => flyResiumCameraTo(-Math.PI / 4, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -196,9 +161,7 @@ export const ResiumViewCube = () => {
           <div
             id='vertex_ten'
             className='vertex'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TEN')
-            }}
+            onClick={() => flyResiumCameraTo(-3 * Math.PI / 4, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -207,9 +170,7 @@ export const ResiumViewCube = () => {
           <div
             id='vertex_tnw'
             className='vertex'
-            onClick={() => {
-              console.log('ResiumViewCube#onClick: TNW')
-            }}
+            onClick={() => flyResiumCameraTo(3 * Math.PI / 4, -Math.PI / 4)}
           >
             <div/>
             <div/>
@@ -217,6 +178,6 @@ export const ResiumViewCube = () => {
           </div>
         </>
       </div>
-    </div>
+    </div >
   )
 }
