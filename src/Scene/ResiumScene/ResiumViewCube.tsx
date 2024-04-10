@@ -16,7 +16,10 @@ export const ResiumViewCube = () => {
     }
 
     const range = tileset.boundingSphere.radius * 2
-    resiumViewer.flyTo(tileset, {offset: new HeadingPitchRange(heading, pitch, range)})
+    resiumViewer.flyTo(tileset, {
+      offset: new HeadingPitchRange(heading, pitch, range),
+      maximumHeight: 0,
+    })
   }
 
   useEffect(() => {
