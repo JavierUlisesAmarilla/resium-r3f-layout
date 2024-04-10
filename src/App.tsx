@@ -1,29 +1,85 @@
-import * as Cesium from 'cesium'
-import {useEffect, useState} from 'react'
-import {Scene} from './Scene/Scene'
+import * as FlexLayout from 'flexlayout-react'
+import 'flexlayout-react/style/light.css'
+import {One} from './One'
+
+
+const model = FlexLayout.Model.fromJson({
+  global: {tabEnableClose: false},
+  borders: [
+    {
+      type: 'border',
+      location: 'bottom',
+      size: 100,
+      children: [
+        {
+          type: 'tab',
+          name: 'Four',
+          component: 'text',
+        },
+      ],
+    },
+    {
+      type: 'border',
+      location: 'left',
+      size: 100,
+      children: [],
+    },
+  ],
+  layout: {
+    type: 'row',
+    weight: 100,
+    children: [
+      {
+        type: 'tabset',
+        weight: 50,
+        selected: 0,
+        children: [
+          {
+            type: 'tab',
+            name: 'One',
+            component: 'one',
+          },
+        ],
+      },
+      {
+        type: 'tabset',
+        weight: 50,
+        selected: 0,
+        children: [
+          {
+            type: 'tab',
+            name: 'Two',
+            component: 'text',
+          },
+          {
+            type: 'tab',
+            name: 'Three',
+            component: 'text',
+          },
+        ],
+      },
+    ],
+  },
+})
 
 
 export const App = () => {
-  const [terrainProvider, setTerrainProvider] = useState<Cesium.CesiumTerrainProvider>()
+  const factory = (node: FlexLayout.TabNode) => {
+    const component = node.getComponent()
 
-  useEffect(() => {
-    (async () => {
-      const worldTerrain = await Cesium.createWorldTerrainAsync({
-        requestVertexNormals: true,
-        requestWaterMask: true,
-      })
-      setTerrainProvider(worldTerrain)
-    })()
-  }, [])
+    if (component === 'one') {
+      return <One/>
+    }
 
-  return terrainProvider && (
-    <Scene
-      className='relative flex flex-col w-full h-full'
-      terrainProvider={terrainProvider}
-      // assetId={2302071}
-      // assetId={1521848}
-      // assetId={2310587}
-      assetId={2482359}
+    if (component === 'button') {
+      return <button>{node.getName()}</button>
+    }
+  }
+
+  return (
+    <FlexLayout.Layout
+      model={model}
+      factory={factory}
     />
   )
 }
