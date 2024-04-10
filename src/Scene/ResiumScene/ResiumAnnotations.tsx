@@ -27,13 +27,13 @@ export const ResiumAnnotations = () => {
       for (let i = 0; i < 10; i++) {
         newAnnotationArr.push({
           startPoint: Cartesian3.fromRadians(
-              cartographic.longitude + (Math.random() * angleOffset),
-              cartographic.latitude + (Math.random() * angleOffset),
+              cartographic.longitude + (angleOffset / 2) - (Math.random() * angleOffset),
+              cartographic.latitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.height + (Math.random() * heightOffset),
           ),
           endPoint: Cartesian3.fromRadians(
-              cartographic.longitude + (Math.random() * angleOffset),
-              cartographic.latitude + (Math.random() * angleOffset),
+              cartographic.longitude + (angleOffset / 2) - (Math.random() * angleOffset),
+              cartographic.latitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.height + (Math.random() * heightOffset),
           ),
         })
