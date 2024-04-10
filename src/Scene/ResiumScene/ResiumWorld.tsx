@@ -1,11 +1,12 @@
-import {Cartesian3, Cartographic, CesiumTerrainProvider, Color, HeadingPitchRange, IonResource} from 'cesium'
+import {Cartesian3, Cartographic, CesiumTerrainProvider, Color, HeadingPitchRange, IonResource, NearFarScalar} from 'cesium'
 import {useEffect, useState} from 'react'
-import {Cesium3DTileset, Entity, PolylineGraphics, useCesium} from 'resium'
+import {Cesium3DTileset, Entity, PointGraphics, PolylineGraphics, useCesium} from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
 
 
 let prevAssetId: number
+const pointScalar = new NearFarScalar(20, 0.7, 1000, 0)
 
 
 export const ResiumWorld = ({
@@ -55,7 +56,7 @@ export const ResiumWorld = ({
             const newTopCart3 = Cartesian3.fromRadians(
                 newCenterCartographic.longitude + 0.00001,
                 newCenterCartographic.latitude + 0.00001,
-                newCenterCartographic.height + 250,
+                newCenterCartographic.height + 180,
             )
             setTopCart3(newTopCart3)
           }}
@@ -66,14 +67,32 @@ export const ResiumWorld = ({
         />
       }
       {centerCart3 && topCart3 &&
-        <Entity>
-          <PolylineGraphics
-            positions={[centerCart3, topCart3]}
-            material={Color.GREENYELLOW}
-            depthFailMaterial={Color.GREENYELLOW}
-            width={2}
-          />
-        </Entity>
+        <>
+          <Entity position={centerCart3}>
+            <PointGraphics
+              scaleByDistance={pointScalar}
+              color={Color.RED}
+              pixelSize={20}
+              disableDepthTestDistance={Number.POSITIVE_INFINITY}
+            />
+          </Entity>
+          <Entity>
+            <PolylineGraphics
+              positions={[centerCart3, topCart3]}
+              material={Color.GREENYELLOW}
+              depthFailMaterial={Color.GREENYELLOW}
+              width={2}
+            />
+          </Entity>
+          <Entity position={topCart3}>
+            <PointGraphics
+              scaleByDistance={pointScalar}
+              color={Color.RED}
+              pixelSize={20}
+              disableDepthTestDistance={Number.POSITIVE_INFINITY}
+            />
+          </Entity>
+        </>
       }
     </>
   )
