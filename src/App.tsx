@@ -1,14 +1,14 @@
-import {CesiumTerrainProvider, createWorldTerrainAsync} from 'cesium'
+import * as Cesium from 'cesium'
 import {useEffect, useState} from 'react'
 import {Scene} from './Scene/Scene'
 
 
 export const App = () => {
-  const [terrainProvider, setTerrainProvider] = useState<CesiumTerrainProvider>()
+  const [terrainProvider, setTerrainProvider] = useState<Cesium.CesiumTerrainProvider>()
 
   useEffect(() => {
     (async () => {
-      const worldTerrain = await createWorldTerrainAsync({
+      const worldTerrain = await Cesium.createWorldTerrainAsync({
         requestVertexNormals: true,
         requestWaterMask: true,
       })

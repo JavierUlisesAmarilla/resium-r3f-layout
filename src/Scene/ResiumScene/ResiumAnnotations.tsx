@@ -1,16 +1,16 @@
-import {Cartesian3, Cartographic, Color, NearFarScalar} from 'cesium'
+import * as Cesium from 'cesium'
 import {Fragment, useEffect, useState} from 'react'
-import {Entity, PointGraphics, PolylineGraphics} from 'resium'
+import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 
 
 export type AnnotationType = {
-  startPoint: Cartesian3
-  endPoint: Cartesian3
+  startPoint: Cesium.Cartesian3
+  endPoint: Cesium.Cartesian3
 }
 
 
-const pointScalar = new NearFarScalar(20, 0.7, 1000, 0)
+const pointScalar = new Cesium.NearFarScalar(20, 0.7, 1000, 0)
 const angleOffset = 0.00001
 const heightOffset = 50
 
@@ -21,17 +21,17 @@ export const ResiumAnnotations = () => {
 
   useEffect(() => {
     if (tileset) {
-      const cartographic = Cartographic.fromCartesian(tileset.boundingSphere.center)
+      const cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center)
       const newAnnotationArr: AnnotationType[] = []
 
       for (let i = 0; i < 10; i++) {
         newAnnotationArr.push({
-          startPoint: Cartesian3.fromRadians(
+          startPoint: Cesium.Cartesian3.fromRadians(
               cartographic.longitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.latitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.height + (Math.random() * heightOffset),
           ),
-          endPoint: Cartesian3.fromRadians(
+          endPoint: Cesium.Cartesian3.fromRadians(
               cartographic.longitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.latitude + (angleOffset / 2) - (Math.random() * angleOffset),
               cartographic.height + (Math.random() * heightOffset),
@@ -45,30 +45,30 @@ export const ResiumAnnotations = () => {
 
   return annotationArr.map((annotation, index) =>
     <Fragment key={index}>
-      <Entity position={annotation.startPoint}>
-        <PointGraphics
+      <Resium.Entity position={annotation.startPoint}>
+        <Resium.PointGraphics
           scaleByDistance={pointScalar}
-          color={Color.RED}
+          color={Cesium.Color.RED}
           pixelSize={20}
           disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
-      </Entity>
-      <Entity>
-        <PolylineGraphics
+      </Resium.Entity>
+      <Resium.Entity>
+        <Resium.PolylineGraphics
           positions={[annotation.startPoint, annotation.endPoint]}
-          material={Color.GREENYELLOW}
-          depthFailMaterial={Color.GREENYELLOW}
+          material={Cesium.Color.GREENYELLOW}
+          depthFailMaterial={Cesium.Color.GREENYELLOW}
           width={2}
         />
-      </Entity>
-      <Entity position={annotation.endPoint}>
-        <PointGraphics
+      </Resium.Entity>
+      <Resium.Entity position={annotation.endPoint}>
+        <Resium.PointGraphics
           scaleByDistance={pointScalar}
-          color={Color.RED}
+          color={Cesium.Color.RED}
           pixelSize={20}
           disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
-      </Entity>
+      </Resium.Entity>
     </Fragment>,
   )
 }

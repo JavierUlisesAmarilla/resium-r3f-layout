@@ -1,16 +1,16 @@
-import {Cartesian3, Cesium3DTileset, Viewer} from 'cesium'
+import * as Cesium from 'cesium'
 import {ZustandSlice} from './useZustand'
 
 
 export type ResiumSlice = {
-  resiumViewer: Viewer | undefined
-  setResiumViewer: (resiumViewer: Viewer | undefined) => void
+  resiumViewer: Cesium.Viewer | undefined
+  setResiumViewer: (resiumViewer: Cesium.Viewer | undefined) => void
 
-  tileset: Cesium3DTileset | undefined
-  setTileset: (tileset: Cesium3DTileset | undefined) => void
+  tileset: Cesium.Cesium3DTileset | undefined
+  setTileset: (tileset: Cesium.Cesium3DTileset | undefined) => void
 
-  centerCart3: Cartesian3 | undefined
-  setCenterCart3: (centerCart3: Cartesian3 | undefined) => void
+  centerCart3: Cesium.Cartesian3 | undefined
+  setCenterCart3: (centerCart3: Cesium.Cartesian3 | undefined) => void
 }
 
 

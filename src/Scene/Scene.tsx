@@ -1,4 +1,4 @@
-import {CesiumTerrainProvider} from 'cesium'
+import * as Cesium from 'cesium'
 import {ResiumScene} from './ResiumScene/ResiumScene'
 
 
@@ -8,7 +8,7 @@ export const Scene = ({
   assetId,
 }: {
   className: string
-  terrainProvider: CesiumTerrainProvider
+  terrainProvider: Cesium.CesiumTerrainProvider
   assetId: number
 }) => {
   return (

@@ -1,4 +1,4 @@
-import {Cartesian3, DebugModelMatrixPrimitive, HeadingPitchRange, Matrix4, OrthographicFrustum, PerspectiveFrustum, Transforms} from 'cesium'
+import * as Cesium from 'cesium'
 import gsap from 'gsap'
 import {useCallback, useEffect} from 'react'
 import {Box3, MathUtils, Mesh, OrthographicCamera, PerspectiveCamera, Vector3} from 'three'
@@ -7,13 +7,13 @@ import {cesiumMatrix4ToThreePosition, getAngle, normalizeAngle, threePositionToC
 import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_DISTANCE, CAMERA_NEAR, ROT_ANIM_FACTOR, SHOW_AXES_HELPER, USE_R3F_CAMERA} from '../utils/constants'
 
 
-let resiumAxesHelpers: {[key: string]: DebugModelMatrixPrimitive} = {}
+let resiumAxesHelpers: {[key: string]: Cesium.DebugModelMatrixPrimitive} = {}
 const box3 = new Box3()
 const vector3 = new Vector3()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, r3fControlsRef, r3fCamera, centerCart3, areAllEventsOnLockdown, setAreAllEventsOnLockdown} = useZustand()
+  const {resiumViewer, r3fControlsRef, r3fCamera, centerCart3, areAllEventsOnLockDown, setAreAllEventsOnLockDown} = useZustand()
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
   const r3fControls = r3fControlsRef?.current
@@ -22,13 +22,13 @@ export const useCameraUtils = () => {
   const syncFieldOfView = useCallback(() => {
     if (r3fCamera && resiumCamera) {
       if (r3fCamera instanceof PerspectiveCamera) {
-        if (!(resiumCamera.frustum instanceof PerspectiveFrustum)) {
+        if (!(resiumCamera.frustum instanceof Cesium.PerspectiveFrustum)) {
           resiumCamera.switchToPerspectiveFrustum()
         }
 
         const r3fCameraAspect = r3fCamera.aspect
         const r3fCameraFov = r3fCamera.fov
-        const resiumCameraFrustum = resiumCamera.frustum as PerspectiveFrustum
+        const resiumCameraFrustum = resiumCamera.frustum as Cesium.PerspectiveFrustum
 
         // R3f camera's field of view is actual angle, not radians. So need to convert it to radians to synchronize with Resium camera.
         if (r3fCameraAspect < 1) { // When portrait mode
@@ -39,12 +39,12 @@ export const useCameraUtils = () => {
           resiumCameraFrustum.fov = resiumFovX
         }
       } else if (r3fCamera instanceof OrthographicCamera) {
-        if (!(resiumCamera.frustum instanceof OrthographicFrustum)) {
+        if (!(resiumCamera.frustum instanceof Cesium.OrthographicFrustum)) {
           resiumCamera.switchToOrthographicFrustum()
         }
 
         // This is experimental yet.
-        const resiumOrhtoFrustum = resiumCamera.frustum as OrthographicFrustum
+        const resiumOrhtoFrustum = resiumCamera.frustum as Cesium.OrthographicFrustum
         resiumOrhtoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
         resiumOrhtoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
       }
@@ -52,13 +52,13 @@ export const useCameraUtils = () => {
   }, [r3fCamera, resiumCamera])
 
   // Show axes helper for convenient development. (optional)
-  const devUpdateResiumAxesHelper = useCallback((key: string, modelMatrix: Matrix4) => {
+  const devUpdateResiumAxesHelper = useCallback((key: string, modelMatrix: Cesium.Matrix4) => {
     if (resiumScene) {
       if (SHOW_AXES_HELPER) {
         if (resiumAxesHelpers[key]) {
           resiumAxesHelpers[key].modelMatrix = modelMatrix
         } else {
-          resiumAxesHelpers[key] = new DebugModelMatrixPrimitive({modelMatrix, length: AXES_LENGTH})
+          resiumAxesHelpers[key] = new Cesium.DebugModelMatrixPrimitive({modelMatrix, length: AXES_LENGTH})
           resiumScene.primitives.add(resiumAxesHelpers[key])
         }
       } else if (resiumAxesHelpers) {
@@ -78,26 +78,26 @@ export const useCameraUtils = () => {
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
       const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
       const range = r3fControls.getDistance()
-      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new HeadingPitchRange(heading, pitch, range))
-      devUpdateResiumAxesHelper('centerCart3', Transforms.eastNorthUpToFixedFrame(centerCart3))
+      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
+      devUpdateResiumAxesHelper('centerCart3', Cesium.Transforms.eastNorthUpToFixedFrame(centerCart3))
     }
   }, [centerCart3, r3fControls, resiumCamera, syncFieldOfView, devUpdateResiumAxesHelper])
 
   // Synchronize cesium camera to r3f camera.
-  const syncCesiumToR3f = (targetCart3: Cartesian3) => {
+  const syncCesiumToR3f = (targetCart3: Cesium.Cartesian3) => {
     if (resiumCamera && centerCart3 && r3fControls && r3fCamera) {
       syncFieldOfView()
-      const resiumCameraPosition = cesiumMatrix4ToThreePosition(Transforms.eastNorthUpToFixedFrame(resiumCamera.positionWC), centerCart3)
+      const resiumCameraPosition = cesiumMatrix4ToThreePosition(Cesium.Transforms.eastNorthUpToFixedFrame(resiumCamera.positionWC), centerCart3)
       r3fCamera.position.copy(resiumCameraPosition)
-      const targetPosition = cesiumMatrix4ToThreePosition(Transforms.eastNorthUpToFixedFrame(targetCart3), centerCart3)
+      const targetPosition = cesiumMatrix4ToThreePosition(Cesium.Transforms.eastNorthUpToFixedFrame(targetCart3), centerCart3)
       r3fControls.target.copy(targetPosition)
     }
   }
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
-    if (r3fControls && !areAllEventsOnLockdown && r3fCamera) {
-      setAreAllEventsOnLockdown(true)
+    if (r3fControls && !areAllEventsOnLockDown && r3fCamera) {
+      setAreAllEventsOnLockDown(true)
       const angleTo = getAngle(r3fControls.target, r3fCamera.position, target)
       await gsap.timeline().to(r3fControls.target, {
         x: target.x,
@@ -105,7 +105,7 @@ export const useCameraUtils = () => {
         z: target.z,
         duration: angleTo > Math.PI * ANGLE_TOLERANCE_FACTOR ? ANIM_DURATION * ROT_ANIM_FACTOR : 0,
       })
-      setAreAllEventsOnLockdown(false)
+      setAreAllEventsOnLockDown(false)
     }
   }
 
@@ -121,8 +121,8 @@ export const useCameraUtils = () => {
   const animateR3fZoomToTarget = async (target: Vector3, zoomDistance = 0) => {
     await animateR3fLookAt(target)
 
-    if (!areAllEventsOnLockdown && r3fCamera) {
-      setAreAllEventsOnLockdown(true)
+    if (!areAllEventsOnLockDown && r3fCamera) {
+      setAreAllEventsOnLockDown(true)
       const direction = target.sub(r3fCamera.position)
       const directionLength = direction.length()
       const scale = (directionLength - zoomDistance) / directionLength
@@ -134,7 +134,7 @@ export const useCameraUtils = () => {
         z: moveTarget.z,
         duration: ANIM_DURATION,
       })
-      setAreAllEventsOnLockdown(false)
+      setAreAllEventsOnLockDown(false)
     }
   }
 
@@ -142,15 +142,15 @@ export const useCameraUtils = () => {
   const animateR3fMoveToDefaultPosition = async () => {
     await animateR3fLookAt(new Vector3(0, 0, 0))
 
-    if (!areAllEventsOnLockdown && r3fCamera) {
-      setAreAllEventsOnLockdown(true)
+    if (!areAllEventsOnLockDown && r3fCamera) {
+      setAreAllEventsOnLockDown(true)
       await gsap.timeline().to(r3fCamera.position, {
         x: CAMERA_DISTANCE,
         y: CAMERA_DISTANCE,
         z: CAMERA_DISTANCE,
         duration: ANIM_DURATION,
       })
-      setAreAllEventsOnLockdown(false)
+      setAreAllEventsOnLockDown(false)
     }
   }
 
@@ -168,14 +168,14 @@ export const useCameraUtils = () => {
     }
 
     /* Start to set target and HeadingPitchRange */
-    let targetCart3 = new Cartesian3()
-    const headingPitchRange = new HeadingPitchRange()
+    let targetCart3 = new Cesium.Cartesian3()
+    const headingPitchRange = new Cesium.HeadingPitchRange()
 
     if (entity.polyline) {
       const cart3Arr = entity.polyline.positions?.getValue(resiumViewer.clock.currentTime)
       // Target
-      const cart3Sum = Cartesian3.add(cart3Arr[0], cart3Arr[1], new Cartesian3())
-      Cartesian3.divideByScalar(cart3Sum, 2, targetCart3)
+      const cart3Sum = Cesium.Cartesian3.add(cart3Arr[0], cart3Arr[1], new Cesium.Cartesian3())
+      Cesium.Cartesian3.divideByScalar(cart3Sum, 2, targetCart3)
     } else {
       const newTargetCart3 = entity.position?.getValue(resiumViewer.clock.currentTime)
 

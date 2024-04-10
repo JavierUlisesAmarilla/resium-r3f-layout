@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import {HeadingPitchRange} from 'cesium'
+import * as Cesium from 'cesium'
 import {useEffect, useRef} from 'react'
 import {useZustand} from '../../store/useZustand'
 import './ResiumViewCube.css'
@@ -17,7 +17,7 @@ export const ResiumViewCube = () => {
 
     const range = tileset.boundingSphere.radius * 2
     resiumViewer.flyTo(tileset, {
-      offset: new HeadingPitchRange(heading, pitch, range),
+      offset: new Cesium.HeadingPitchRange(heading, pitch, range),
       maximumHeight: 0,
     })
   }

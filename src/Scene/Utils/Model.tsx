@@ -1,15 +1,15 @@
 /* eslint-disable react/no-unknown-property */
-import {Euler, Vector3, useFrame, useThree} from '@react-three/fiber'
-import {Boolean3Array, RapierRigidBody, RigidBody, RigidBodyAutoCollider, vec3} from '@react-three/rapier'
-import {useGesture} from '@use-gesture/react'
-import {AnimatePresence} from 'framer-motion'
-import {motion} from 'framer-motion-3d'
-import {ReactNode, useEffect, useRef} from 'react'
+import { Euler, Vector3, useFrame, useThree } from '@react-three/fiber'
+import { Boolean3Array, RapierRigidBody, RigidBody, RigidBodyAutoCollider, vec3 } from '@react-three/rapier'
+import { useGesture } from '@use-gesture/react'
+import { AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion-3d'
+import { ReactNode, useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import {useCameraUtils} from '../../hooks/useCameraUtils'
-import {useCustomGltf} from '../../hooks/useCustomGltf'
-import {useZustand} from '../../store/useZustand'
-import {AXES_LENGTH} from '../../utils/constants'
+import { useCameraUtils } from '../../hooks/useCameraUtils'
+import { useCustomGltf } from '../../hooks/useCustomGltf'
+import { useZustand } from '../../store/useZustand'
+import { AXES_LENGTH } from '../../utils/constants'
 
 
 const worldPos = new THREE.Vector3()
@@ -62,7 +62,7 @@ export const Model = ({
   const rigidBodyRef = useRef<RapierRigidBody>(null)
   const groupRef = useRef<THREE.Group>(null)
   const {camera} = useThree()
-  const {areAllEventsOnLockdown} = useZustand()
+  const {areAllEventsOnLockDown} = useZustand()
   const {modelScene, mixer, actions} = useCustomGltf(modelPath, useCloneGltf)
   const {animateR3fZoomToTarget} = useCameraUtils()
   const realModelScale = modelScale || 1
@@ -71,7 +71,7 @@ export const Model = ({
     onPointerDown: (state) => {
       const {event} = state
 
-      if (event.button === 0 && enableZoom && !areAllEventsOnLockdown && rigidBodyRef.current && groupRef.current) { // Left
+      if (event.button === 0 && enableZoom && !areAllEventsOnLockDown && rigidBodyRef.current && groupRef.current) { // Left
         if (usePhysics) {
           worldPos.copy(vec3(rigidBodyRef.current.translation()))
         } else {

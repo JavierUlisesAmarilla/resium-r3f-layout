@@ -1,15 +1,15 @@
-import {ZustandSlice} from './useZustand'
+import { ZustandSlice } from './useZustand'
 
 
 export type CommonSlice = {
-  areAllEventsOnLockdown: boolean
-  setAreAllEventsOnLockdown: (areAllEventsOnLockdown: boolean) => void
+  areAllEventsOnLockDown: boolean
+  setAreAllEventsOnLockDown: (areAllEventsOnLockDown: boolean) => void
 }
 
 
 export const createCommonSlice: ZustandSlice<CommonSlice> = (set) => {
   return {
-    areAllEventsOnLockdown: false,
-    setAreAllEventsOnLockdown: (areAllEventsOnLockdown) => set(() => ({areAllEventsOnLockdown})),
+    areAllEventsOnLockDown: false,
+    setAreAllEventsOnLockDown: (areAllEventsOnLockDown) => set(() => ({areAllEventsOnLockDown})),
   }
 }
