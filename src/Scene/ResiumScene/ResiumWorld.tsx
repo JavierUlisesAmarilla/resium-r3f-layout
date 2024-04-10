@@ -56,7 +56,7 @@ export const ResiumWorld = ({
             const newTopCart3 = Cartesian3.fromRadians(
                 newCenterCartographic.longitude + 0.00001,
                 newCenterCartographic.latitude + 0.00001,
-                newCenterCartographic.height + 180,
+                newCenterCartographic.height + 100,
             )
             setTopCart3(newTopCart3)
           }}
