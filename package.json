@@ -27,7 +27,7 @@
     "react-icons": "^4.11.0",
     "react-loader-spinner": "^5.3.4",
     "react-router-dom": "^6.10.0",
-    "resium": "^1.17.3",
+    "resium": "^1.17.2",
     "three": "^0.149.0",
     "use-gesture": "^1.0.0",
     "vite-plugin-glsl": "^1.1.2",
