@@ -17,7 +17,7 @@ export const ResiumLabels = () => {
           show
           text='Label'
           // font=''
-          // style={}
+          style={Cesium.LabelStyle.FILL}
           // scale={}
           showBackground
           backgroundColor={Cesium.Color.YELLOW}
@@ -42,7 +42,7 @@ export const ResiumLabels = () => {
           show
           text='LabelGraphics'
           // font=''
-          // style={}
+          style={Cesium.LabelStyle.FILL}
           // scale={}
           showBackground
           backgroundColor={Cesium.Color.YELLOW}
