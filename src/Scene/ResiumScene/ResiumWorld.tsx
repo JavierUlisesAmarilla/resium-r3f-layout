@@ -4,6 +4,7 @@ import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
 import {ResiumAnnotations} from './ResiumAnnotations'
+import {ResiumLabels} from './ResiumLabels'
 
 
 let prevAssetId: number
@@ -63,6 +64,7 @@ export const ResiumWorld = ({
         />
       }
       <ResiumAnnotations/>
+      <ResiumLabels/>
     </>
   )
 }
