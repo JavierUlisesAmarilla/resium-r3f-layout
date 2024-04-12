@@ -12,7 +12,7 @@ export const ResiumLabels = () => {
         modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(tileset.boundingSphere.center)}
       >
         <Resium.Label
-          position={new Cesium.Cartesian3(0, 100, 10)}
+          position={new Cesium.Cartesian3(0, 100, 20)}
           // id={}
           show
           text='Label'
@@ -21,7 +21,7 @@ export const ResiumLabels = () => {
           // scale={}
           showBackground
           backgroundColor={Cesium.Color.YELLOW}
-          // backgroundPadding={}
+          backgroundPadding={Cesium.Cartesian2.ZERO}
           // pixelOffset={}
           // eyeOffset={}
           horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
@@ -46,7 +46,7 @@ export const ResiumLabels = () => {
           // scale={}
           showBackground
           backgroundColor={Cesium.Color.YELLOW}
-          // backgroundPadding={}
+          backgroundPadding={Cesium.Cartesian2.ZERO}
           // pixelOffset={}
           // eyeOffset={}
           horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
