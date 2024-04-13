@@ -5,17 +5,17 @@ import {ResiumScene} from './ResiumScene/ResiumScene'
 export const Scene = ({
   className,
   terrainProvider,
-  assetId,
+  tilesetUrl,
 }: {
   className: string
   terrainProvider: Cesium.CesiumTerrainProvider
-  assetId: number
+  tilesetUrl: Cesium.IonResource
 }) => {
   return (
     <div className={className}>
       <ResiumScene
         terrainProvider={terrainProvider}
-        assetId={assetId}
+        tilesetUrl={tilesetUrl}
       />
     </div>
   )

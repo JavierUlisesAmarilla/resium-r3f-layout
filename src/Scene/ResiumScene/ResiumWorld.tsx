@@ -1,5 +1,5 @@
 import * as Cesium from 'cesium'
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
@@ -7,27 +7,15 @@ import {ResiumAnnotations} from './ResiumAnnotations'
 import {ResiumBillboard} from './ResiumBillboard'
 
 
-let prevAssetId: number
-
-
 export const ResiumWorld = ({
   terrainProvider,
-  assetId,
+  tilesetUrl,
 }: {
   terrainProvider: Cesium.CesiumTerrainProvider
-  assetId: number
+  tilesetUrl: Cesium.IonResource
 }) => {
   const {viewer} = Resium.useCesium()
   const {setResiumViewer, setCenterCart3, tileset, setTileset} = useZustand()
-  const [tilesetUrl, setTilesetUrl] = useState<Promise<Cesium.IonResource>>()
-
-  useEffect(() => {
-    if (prevAssetId !== assetId) {
-      const newTilesetUrl = Cesium.IonResource.fromAssetId(assetId)
-      setTilesetUrl(newTilesetUrl)
-      prevAssetId = assetId
-    }
-  }, [assetId])
 
   useEffect(() => {
     if (viewer) {
@@ -46,23 +34,21 @@ export const ResiumWorld = ({
         inertiaZoom={0}
         maximumZoomDistance={5000}
       />
-      {tilesetUrl &&
-        <Resium.Cesium3DTileset
-          url={tilesetUrl}
-          projectTo2D
-          // debugShowBoundingVolume
-          onReady={async (newTileset) => {
-            const newCenterCart3 = await clampTilesetToTerrain(terrainProvider, newTileset)
-            viewer?.zoomTo(newTileset, new Cesium.HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
-            setTileset(newTileset)
-            setCenterCart3(newCenterCart3)
-          }}
-          onClick={(movement, target) => {
-            console.log('ResiumWorld#Cesium3DTileset#onClick: movement:', movement)
-            console.log('ResiumWorld#Cesium3DTileset#onClick: target:', target)
-          }}
-        />
-      }
+      <Resium.Cesium3DTileset
+        url={tilesetUrl}
+        projectTo2D
+        // debugShowBoundingVolume
+        onReady={async (newTileset) => {
+          const newCenterCart3 = await clampTilesetToTerrain(terrainProvider, newTileset)
+          viewer?.zoomTo(newTileset, new Cesium.HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
+          setTileset(newTileset)
+          setCenterCart3(newCenterCart3)
+        }}
+        onClick={(movement, target) => {
+          console.log('ResiumWorld#Cesium3DTileset#onClick: movement:', movement)
+          console.log('ResiumWorld#Cesium3DTileset#onClick: target:', target)
+        }}
+      />
       <ResiumAnnotations/>
       {tileset &&
         <ResiumBillboard

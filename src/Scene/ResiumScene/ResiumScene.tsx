@@ -10,10 +10,10 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 
 export const ResiumScene = ({
   terrainProvider,
-  assetId,
+  tilesetUrl,
 }: {
   terrainProvider: Cesium.CesiumTerrainProvider
-  assetId: number
+  tilesetUrl: Cesium.IonResource
 }) => {
   return (
     <>
@@ -47,7 +47,7 @@ export const ResiumScene = ({
       >
         <ResiumWorld
           terrainProvider={terrainProvider}
-          assetId={assetId}
+          tilesetUrl={tilesetUrl}
         />
       </Resium.Viewer>
       <ResiumViewCube/>
