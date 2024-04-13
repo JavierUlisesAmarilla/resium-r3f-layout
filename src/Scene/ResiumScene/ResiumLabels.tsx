@@ -8,58 +8,26 @@ export const ResiumLabels = () => {
 
   return tileset && (
     <>
-      <Resium.LabelCollection
-        modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(tileset.boundingSphere.center)}
-      >
-        <Resium.Label
-          position={new Cesium.Cartesian3(0, 100, 20)}
-          // id={}
-          show
-          text='Label'
-          // font=''
-          style={Cesium.LabelStyle.FILL}
-          // scale={}
-          showBackground
-          backgroundColor={Cesium.Color.YELLOW}
-          backgroundPadding={Cesium.Cartesian2.ZERO}
-          // pixelOffset={}
-          // eyeOffset={}
+      <Resium.BillboardCollection modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(tileset.boundingSphere.center)}>
+        <Resium.Billboard
+          position={Cesium.Cartesian3.ZERO}
+          image='billboard.jpg'
           horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
           verticalOrigin={Cesium.VerticalOrigin.CENTER}
-          // heightReference={}
-          fillColor={Cesium.Color.BLACK}
-        // outlineColor={}
-        // outlineWidth={}
-        // translucencyByDistance={}
-        // pixelOffsetScaleByDistance={}
-        // scaleByDistance={}
-        // distanceDisplayCondition={}
-        // disableDepthTestDistance={}
+          color={Cesium.Color.YELLOW}
+          sizeInMeters
+          width={80}
+          height={14}
         />
-      </Resium.LabelCollection>
+      </Resium.BillboardCollection>
       <Resium.Entity position={tileset.boundingSphere.center}>
         <Resium.LabelGraphics
-          show
           text='LabelGraphics'
-          // font=''
           style={Cesium.LabelStyle.FILL}
-          // scale={}
-          showBackground
-          backgroundColor={Cesium.Color.YELLOW}
-          backgroundPadding={Cesium.Cartesian2.ZERO}
-          // pixelOffset={}
-          // eyeOffset={}
           horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
           verticalOrigin={Cesium.VerticalOrigin.CENTER}
-          // heightReference={}
-          fillColor={Cesium.Color.BLACK}
-        // outlineColor={}
-        // outlineWidth={}
-        // translucencyByDistance={}
-        // pixelOffsetScaleByDistance={}
-        // scaleByDistance={}
-        // distanceDisplayCondition={}
-        // disableDepthTestDistance={}
+          fillColor={Cesium.Color.BLUE}
+          disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
       </Resium.Entity>
     </>
