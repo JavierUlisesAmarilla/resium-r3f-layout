@@ -15,7 +15,7 @@ export const ResiumLabels = () => {
         backgroundColor={Cesium.Color.YELLOW}
         horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
         verticalOrigin={Cesium.VerticalOrigin.CENTER}
-        heightReference={Cesium.HeightReference.CLAMP_TO_TERRAIN}
+        heightReference={Cesium.HeightReference.CLAMP_TO_GROUND}
         fillColor={Cesium.Color.BLUE}
         disableDepthTestDistance={Number.POSITIVE_INFINITY}
       />
