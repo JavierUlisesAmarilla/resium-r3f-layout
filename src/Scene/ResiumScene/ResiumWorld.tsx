@@ -44,7 +44,7 @@ export const ResiumWorld = ({
       <Resium.ScreenSpaceCameraController
         enableInputs={true}
         inertiaZoom={0}
-        maximumZoomDistance={1000}
+        maximumZoomDistance={5000}
       />
       {tilesetUrl &&
         <Resium.Cesium3DTileset

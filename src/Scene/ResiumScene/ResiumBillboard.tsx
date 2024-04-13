@@ -4,6 +4,9 @@ import {useEffect, useState} from 'react'
 import * as Resium from 'resium'
 
 
+const scaleByDistance = new Cesium.NearFarScalar(0, 1, 1000, 0)
+
+
 export const ResiumBillboard = ({
   position,
   text = '',
@@ -41,7 +44,7 @@ export const ResiumBillboard = ({
       ctx.fillStyle = 'yellow'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'blue'
-      ctx.lineWidth = 2
+      ctx.lineWidth = 0
       ctx.strokeText(text, paddingX, height)
       ctx.fillText(text, paddingX, height)
     }
@@ -54,6 +57,7 @@ export const ResiumBillboard = ({
       <Resium.Billboard
         position={Cesium.Cartesian3.ZERO}
         image={billboardCanvas}
+        scaleByDistance={scaleByDistance}
         disableDepthTestDistance={Number.POSITIVE_INFINITY}
       />
     </Resium.BillboardCollection>
