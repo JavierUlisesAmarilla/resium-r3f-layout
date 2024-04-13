@@ -4,7 +4,7 @@ import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
 import {ResiumAnnotations} from './ResiumAnnotations'
-import {ResiumLabels} from './ResiumLabels'
+import {ResiumBillboard} from './ResiumBillboard'
 
 
 let prevAssetId: number
@@ -18,7 +18,7 @@ export const ResiumWorld = ({
   assetId: number
 }) => {
   const {viewer} = Resium.useCesium()
-  const {setResiumViewer, setCenterCart3, setTileset} = useZustand()
+  const {setResiumViewer, setCenterCart3, tileset, setTileset} = useZustand()
   const [tilesetUrl, setTilesetUrl] = useState<Promise<Cesium.IonResource>>()
 
   useEffect(() => {
@@ -64,7 +64,12 @@ export const ResiumWorld = ({
         />
       }
       <ResiumAnnotations/>
-      <ResiumLabels/>
+      {tileset &&
+        <ResiumBillboard
+          position={tileset.boundingSphere.center}
+          text='Billboard'
+        />
+      }
     </>
   )
 }
