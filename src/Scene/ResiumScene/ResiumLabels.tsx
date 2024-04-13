@@ -10,6 +10,7 @@ export const ResiumLabels = () => {
     <Resium.Entity position={tileset.boundingSphere.center}>
       <Resium.LabelGraphics
         text='LabelGraphics'
+        font='30px sans-serif'
         showBackground
         backgroundColor={Cesium.Color.YELLOW}
         horizontalOrigin={Cesium.HorizontalOrigin.CENTER}
