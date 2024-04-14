@@ -1,3 +1,4 @@
+import turfCenter from '@turf/center'
 import * as Cesium from 'cesium'
 import {MathUtils, Vector3} from 'three'
 
@@ -51,8 +52,8 @@ export const clampTilesetToTerrain = async (terrainProvider: Cesium.CesiumTerrai
 
 
 // Convert three.js based position to cesium based matrix.
-export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCart3: Cesium.Cartesian3) => {
-  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(centerCart3)
+export const threePositionToCesiumMatrix4 = (threePosition: Vector3) => {
+  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.ZERO)
   const threePositionCart3 = new Cesium.Cartesian3(threePosition.x, -threePosition.z, threePosition.y)
   const threePositionMatrix4 = Cesium.Matrix4.fromTranslation(threePositionCart3)
   const cesiumMatrix4 = Cesium.Matrix4.multiply(centerCart3Matrix4, threePositionMatrix4, new Cesium.Matrix4())
@@ -61,10 +62,41 @@ export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCart3
 
 
 // Convert cesium based matrix to three.js based position.
-export const cesiumMatrix4ToThreePosition = (cesiumMatrix4: Cesium.Matrix4, centerCart3: Cesium.Cartesian3) => {
-  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(centerCart3)
+export const cesiumCartesian3ToThreePosition = (cartesian3: Cesium.Cartesian3) => {
+  const cesiumMatrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(cartesian3)
+  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.ZERO)
   const threePositionMatrix4 = Cesium.Matrix4.multiply(Cesium.Matrix4.inverse(centerCart3Matrix4, new Cesium.Matrix4()), cesiumMatrix4, new Cesium.Matrix4())
   const threePositionCart3 = Cesium.Matrix4.getTranslation(threePositionMatrix4, new Cesium.Cartesian3())
   const threePosition = new Vector3(threePositionCart3.x, threePositionCart3.z, -threePositionCart3.y)
   return threePosition
+}
+
+export const positionArrToGeoJSONPolygon = (positionArr: Cesium.Cartesian3[]) => {
+  const coordinateArr = positionArr.map((position) => {
+    const cartographic = Cesium.Cartographic.fromCartesian(position)
+    return [
+      cartographic.longitude,
+      cartographic.latitude,
+    ]
+  })
+
+  // First and last coordinates must be the same for GeoJSON Polygons
+  const cartographic = Cesium.Cartographic.fromCartesian(positionArr[0])
+  coordinateArr.push([cartographic.longitude, cartographic.latitude])
+
+  return {
+    type: 'Polygon',
+    coordinates: [coordinateArr],
+  }
+}
+
+export const getCenterPosition = (positionArr: Cesium.Cartesian3[]) => {
+  const centerPoint = turfCenter(positionArrToGeoJSONPolygon(positionArr))
+  const cartographic = Cesium.Cartographic.fromCartesian(positionArr[0])
+  const centerPosition = Cesium.Cartesian3.fromRadians(
+      centerPoint.geometry.coordinates[0],
+      centerPoint.geometry.coordinates[1],
+      cartographic.height,
+  )
+  return centerPosition
 }

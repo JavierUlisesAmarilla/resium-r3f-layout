@@ -9,22 +9,30 @@ const scaleByDistance = new Cesium.NearFarScalar(0, 1, 1000, 0)
 
 export const ResiumBillboard = ({
   position,
+  show = true,
   text = '',
-  fontSize = 24,
   paddingX = 8,
   paddingY = 4,
+  fontFamily = 'monospace',
+  fontSize = 24,
+  fontColor = 'black',
+  backgroundColor = 'yellow',
 }: {
   position: Cesium.Cartesian3
+  show?: boolean
   text?: string
-  fontSize?: number
   paddingX?: number,
   paddingY?: number,
+  fontSize?: number
+  fontFamily?: string
+  fontColor?: string
+  backgroundColor?: string
 }) => {
   const [billboardCanvas, setBillboardCanvas] = useState<any>()
 
   useEffect(() => {
     // Create div to get height and width then remove it
-    const font = `bold ${fontSize}px Helvetica`
+    const font = `${fontSize}px ${fontFamily}`
     const canvas = document.createElement('canvas')
     const textDiv = document.createElement('div')
     textDiv.style.position = 'absolute'
@@ -41,18 +49,18 @@ export const ResiumBillboard = ({
 
     if (ctx) {
       ctx.font = font
-      ctx.fillStyle = 'yellow'
+      ctx.fillStyle = backgroundColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.fillStyle = 'blue'
+      ctx.fillStyle = fontColor
       ctx.lineWidth = 0
       ctx.strokeText(text, paddingX, height)
       ctx.fillText(text, paddingX, height)
     }
 
     setBillboardCanvas(canvas)
-  }, [fontSize, paddingX, paddingY, text])
+  }, [backgroundColor, fontColor, fontFamily, fontSize, paddingX, paddingY, text])
 
-  return billboardCanvas && (
+  return billboardCanvas && show && (
     <Resium.BillboardCollection modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(position)}>
       <Resium.Billboard
         position={Cesium.Cartesian3.ZERO}

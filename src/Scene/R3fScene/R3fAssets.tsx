@@ -1,13 +1,11 @@
-import {Model} from '../../Utils/Model'
-import {PotreeModel} from '../../Utils/PotreeModel'
-import {Sprite} from '../../Utils/Sprite'
-import {CubeSelector} from './CubeSelector'
+import {Model} from '../Utils/Model'
+import {PotreeModel} from '../Utils/PotreeModel'
+import {Sprite} from '../Utils/Sprite'
 
 
-export const Assets = () => {
+export const R3fAssets = () => {
   return (
     <>
-      <CubeSelector/>
       <PotreeModel
         fileName='cloud.js'
         baseUrl='http://5.9.65.151/mschuetz/potree/resources/pointclouds/weiss/subsea_equipment/'
