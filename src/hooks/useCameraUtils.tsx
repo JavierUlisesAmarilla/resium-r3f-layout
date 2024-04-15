@@ -12,11 +12,11 @@ import {controls} from '../utils/controls'
 let resiumAxesHelpers: {[key: string]: Cesium.DebugModelMatrixPrimitive} = {}
 const box3 = new Box3()
 const vector3 = new Vector3()
-const centerCart2 = new Cesium.Cartesian2()
+const pickCartesian2 = new Cesium.Cartesian2()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, tileset} = useZustand()
+  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3} = useZustand()
   const {navigationMode} = useControls(controls)
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
@@ -79,40 +79,39 @@ export const useCameraUtils = () => {
   const syncR3fToResium = useCallback(() => {
     if (resiumCamera && r3fControls && navigationMode === 'orbitControls') {
       syncFieldOfView()
-      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target)
+      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
       const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
       const range = r3fControls.getDistance()
       resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
     }
-  }, [navigationMode, r3fControls, resiumCamera, syncFieldOfView])
+  }, [centerCartesian3, navigationMode, r3fControls, resiumCamera, syncFieldOfView])
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
     if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'mapControls') {
       syncFieldOfView()
-      const canvas = resiumViewer.scene.canvas
-      const canvasRect = canvas.getBoundingClientRect()
-      centerCart2.x = canvasRect.width / 2
-      centerCart2.y = canvasRect.height / 2
-      const centerRay = resiumCamera.getPickRay(centerCart2)
+      const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
+      pickCartesian2.x = canvasRect.width / 2
+      pickCartesian2.y = canvasRect.height / 2
+      const pickRay = resiumCamera.getPickRay(pickCartesian2)
 
-      if (centerRay) {
-        const centerCartesian3 = resiumScene.globe.pick(centerRay, resiumScene)
+      if (pickRay) {
+        const pickCartesian3 = resiumScene.globe.pick(pickRay, resiumScene)
 
-        if (centerCartesian3) {
-          const centerDistance = Cesium.Cartesian3.distance(resiumCamera.position, centerCartesian3)
+        if (pickCartesian3) {
+          const centerDistance = Cesium.Cartesian3.distance(resiumCamera.position, pickCartesian3)
           if (centerDistance > DEFAULT_TARGET_DISTANCE) {
-            Cesium.Cartesian3.lerp(resiumCamera.position, centerCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, centerCartesian3)
+            Cesium.Cartesian3.lerp(resiumCamera.position, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
           }
-          const resiumCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.position)
+          const resiumCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.position, centerCartesian3)
           r3fCamera.position.copy(resiumCameraPosition)
-          const targetPosition = cesiumCartesian3ToThreePosition(centerCartesian3)
+          const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
           r3fControls.target.copy(targetPosition)
         }
       }
     }
-  }, [navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
+  }, [centerCartesian3, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
@@ -214,10 +213,10 @@ export const useCameraUtils = () => {
   }, [resiumViewer?.scene.postRender, syncResiumToR3f])
 
   useEffect(() => {
-    if (tileset) {
-      devUpdateResiumAxesHelper('tileset', tileset.boundingSphere.center)
+    if (centerCartesian3) {
+      devUpdateResiumAxesHelper('center', centerCartesian3)
     }
-  }, [devUpdateResiumAxesHelper, resiumViewer, tileset])
+  }, [centerCartesian3, devUpdateResiumAxesHelper])
 
   return {
     animateR3fLookAt,

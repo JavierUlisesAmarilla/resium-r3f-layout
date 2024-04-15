@@ -3,7 +3,6 @@ import {useEffect} from 'react'
 import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
-import {ResiumAnnotations} from './ResiumAnnotations'
 import {ResiumBillboard} from './ResiumBillboard'
 
 
@@ -15,7 +14,7 @@ export const ResiumWorld = ({
   tilesetUrl: Cesium.IonResource
 }) => {
   const {viewer} = Resium.useCesium()
-  const {setResiumViewer, tileset, setTileset} = useZustand()
+  const {setResiumViewer, tileset, setTileset, setCenterCartesian3} = useZustand()
 
   useEffect(() => {
     if (viewer) {
@@ -42,13 +41,14 @@ export const ResiumWorld = ({
           await clampTilesetToTerrain(terrainProvider, newTileset)
           viewer?.zoomTo(newTileset, new Cesium.HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
           setTileset(newTileset)
+          setCenterCartesian3(newTileset.boundingSphere.center)
         }}
         onClick={(movement, target) => {
           console.log('ResiumWorld#Cesium3DTileset#onClick: movement:', movement)
           console.log('ResiumWorld#Cesium3DTileset#onClick: target:', target)
         }}
       />
-      <ResiumAnnotations/>
+      {/* <ResiumAnnotations/> */}
       {tileset &&
         <ResiumBillboard
           position={tileset.boundingSphere.center}

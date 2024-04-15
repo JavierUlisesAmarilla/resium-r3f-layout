@@ -22,11 +22,10 @@ export const getAngle = (a: Vector3, b: Vector3, c: Vector3) => {
 // Move tileset vertically by earth's surface.
 export const moveTilesetVertically = (tileset: Cesium.Cesium3DTileset, height: number) => {
   const cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center)
-  const surfaceCart3 = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0)
-  const offsetCart3 = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, height)
-  const translation = Cesium.Cartesian3.subtract(offsetCart3, surfaceCart3, new Cesium.Cartesian3())
+  const surfaceCartesian3 = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0)
+  const offsetCartesian3 = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, height)
+  const translation = Cesium.Cartesian3.subtract(offsetCartesian3, surfaceCartesian3, new Cesium.Cartesian3())
   tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation)
-  return surfaceCart3
 }
 
 
@@ -47,27 +46,27 @@ export const clampTilesetToTerrain = async (terrainProvider: Cesium.CesiumTerrai
   cartographic.height = 0
   await Cesium.sampleTerrainMostDetailed(terrainProvider, [cartographic])
   const minHeight = getTilesetMinBottomHeight(tileset.root)
-  return moveTilesetVertically(tileset, cartographic.height - minHeight)
+  moveTilesetVertically(tileset, cartographic.height - minHeight)
 }
 
 
 // Convert three.js based position to cesium based matrix.
-export const threePositionToCesiumMatrix4 = (threePosition: Vector3) => {
-  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.ZERO)
-  const threePositionCart3 = new Cesium.Cartesian3(threePosition.x, -threePosition.z, threePosition.y)
-  const threePositionMatrix4 = Cesium.Matrix4.fromTranslation(threePositionCart3)
-  const cesiumMatrix4 = Cesium.Matrix4.multiply(centerCart3Matrix4, threePositionMatrix4, new Cesium.Matrix4())
+export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCartesian3 = Cesium.Cartesian3.ZERO) => {
+  const centerCartesian3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(centerCartesian3)
+  const threePositionCartesian3 = new Cesium.Cartesian3(threePosition.x, -threePosition.z, threePosition.y)
+  const threePositionMatrix4 = Cesium.Matrix4.fromTranslation(threePositionCartesian3)
+  const cesiumMatrix4 = Cesium.Matrix4.multiply(centerCartesian3Matrix4, threePositionMatrix4, new Cesium.Matrix4())
   return cesiumMatrix4
 }
 
 
 // Convert cesium based matrix to three.js based position.
-export const cesiumCartesian3ToThreePosition = (cartesian3: Cesium.Cartesian3) => {
+export const cesiumCartesian3ToThreePosition = (cartesian3: Cesium.Cartesian3, centerCartesian3 = Cesium.Cartesian3.ZERO) => {
   const cesiumMatrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(cartesian3)
-  const centerCart3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.ZERO)
-  const threePositionMatrix4 = Cesium.Matrix4.multiply(Cesium.Matrix4.inverse(centerCart3Matrix4, new Cesium.Matrix4()), cesiumMatrix4, new Cesium.Matrix4())
-  const threePositionCart3 = Cesium.Matrix4.getTranslation(threePositionMatrix4, new Cesium.Cartesian3())
-  const threePosition = new Vector3(threePositionCart3.x, threePositionCart3.z, -threePositionCart3.y)
+  const centerCartesian3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(centerCartesian3)
+  const threePositionMatrix4 = Cesium.Matrix4.multiply(Cesium.Matrix4.inverse(centerCartesian3Matrix4, new Cesium.Matrix4()), cesiumMatrix4, new Cesium.Matrix4())
+  const threePositionCartesian3 = Cesium.Matrix4.getTranslation(threePositionMatrix4, new Cesium.Cartesian3())
+  const threePosition = new Vector3(threePositionCartesian3.x, threePositionCartesian3.z, -threePositionCartesian3.y)
   return threePosition
 }
 
