@@ -101,11 +101,11 @@ export const useCameraUtils = () => {
         const pickCartesian3 = resiumScene.globe.pick(pickRay, resiumScene)
 
         if (pickCartesian3) {
-          const centerDistance = Cesium.Cartesian3.distance(resiumCamera.position, pickCartesian3)
+          const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
           if (centerDistance > DEFAULT_TARGET_DISTANCE) {
-            Cesium.Cartesian3.lerp(resiumCamera.position, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
+            Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
           }
-          const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.position, centerCartesian3)
+          const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
           // console.log('useCameraUtils#syncResiumToR3f: r3fCameraPosition:', r3fCameraPosition)
           r3fCamera.position.copy(r3fCameraPosition)
           const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
