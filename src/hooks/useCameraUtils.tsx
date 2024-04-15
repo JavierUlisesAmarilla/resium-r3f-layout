@@ -78,6 +78,7 @@ export const useCameraUtils = () => {
   // Synchronize r3f camera to resium camera.
   const syncR3fToResium = useCallback(() => {
     if (resiumCamera && r3fControls && navigationMode === 'orbitControls') {
+      // console.log('useCameraUtils#syncR3fToResium')
       syncFieldOfView()
       const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
@@ -90,6 +91,7 @@ export const useCameraUtils = () => {
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
     if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'mapControls') {
+      // console.log('useCameraUtils#syncResiumToR3f')
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
@@ -217,6 +219,12 @@ export const useCameraUtils = () => {
       devUpdateResiumAxesHelper('center', centerCartesian3)
     }
   }, [centerCartesian3, devUpdateResiumAxesHelper])
+
+  useEffect(() => {
+    if (resiumScene) {
+      resiumScene.screenSpaceCameraController.enableInputs = navigationMode === 'mapControls'
+    }
+  }, [navigationMode, resiumScene])
 
   return {
     animateR3fLookAt,
