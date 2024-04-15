@@ -17,9 +17,9 @@ export const R3fAssets = () => {
     if (tileset) {
       const centerCartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center)
       const modelLongitude = centerCartographic.longitude + 0.00001
-      setModelPosition(cesiumCartesian3ToThreePosition(Cesium.Cartesian3.fromRadians(centerCartographic.latitude, modelLongitude, centerCartographic.height + 50)))
+      setModelPosition(cesiumCartesian3ToThreePosition(Cesium.Cartesian3.fromRadians(modelLongitude, centerCartographic.latitude, centerCartographic.height + 50)))
       const potreeModelLatitude = centerCartographic.latitude + 0.00001
-      setPotreeModelPosition(cesiumCartesian3ToThreePosition(Cesium.Cartesian3.fromRadians(potreeModelLatitude, centerCartographic.longitude, centerCartographic.height + 50)))
+      setPotreeModelPosition(cesiumCartesian3ToThreePosition(Cesium.Cartesian3.fromRadians(centerCartographic.longitude, potreeModelLatitude, centerCartographic.height + 50)))
     }
   }, [tileset])
 
