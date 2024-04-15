@@ -91,7 +91,6 @@ export const useCameraUtils = () => {
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
     if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'mapControls') {
-      // console.log('useCameraUtils#syncResiumToR3f')
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
@@ -106,8 +105,9 @@ export const useCameraUtils = () => {
           if (centerDistance > DEFAULT_TARGET_DISTANCE) {
             Cesium.Cartesian3.lerp(resiumCamera.position, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
           }
-          const resiumCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.position, centerCartesian3)
-          r3fCamera.position.copy(resiumCameraPosition)
+          const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.position, centerCartesian3)
+          // console.log('useCameraUtils#syncResiumToR3f: r3fCameraPosition:', r3fCameraPosition)
+          r3fCamera.position.copy(r3fCameraPosition)
           const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
           r3fControls.target.copy(targetPosition)
         }
