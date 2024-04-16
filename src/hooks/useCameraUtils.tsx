@@ -226,7 +226,7 @@ export const useCameraUtils = () => {
       if (navigationMode === 'mapControls') {
         resiumScene.screenSpaceCameraController.enableInputs = true
         if (tileset) {
-          resiumViewer.zoomTo(tileset)
+          resiumViewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
         }
       } else {
         resiumScene.screenSpaceCameraController.enableInputs = false
