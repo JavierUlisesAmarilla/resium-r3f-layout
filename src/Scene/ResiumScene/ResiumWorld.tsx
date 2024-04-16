@@ -30,6 +30,7 @@ export const ResiumWorld = ({
       />
       <Resium.ScreenSpaceCameraController
         enableInputs={true}
+        enableLook={false}
         inertiaZoom={0}
         maximumZoomDistance={5000}
       />
