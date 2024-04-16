@@ -1,12 +1,11 @@
 import {Model} from '../Utils/Model'
-import {PotreeModel} from '../Utils/PotreeModel'
 import {Sprite} from '../Utils/Sprite'
 
 
 export const R3fAssets = () => {
   return (
     <>
-      <PotreeModel
+      {/* <PotreeModel
         fileName='cloud.js'
         baseUrl='http://5.9.65.151/mschuetz/potree/resources/pointclouds/weiss/subsea_equipment/'
         modelPos={[-30, -10, -5]}
@@ -19,7 +18,7 @@ export const R3fAssets = () => {
         >
           <div className='p-3 text-3xl font-bold text-white bg-black cursor-pointer opacity-60 rounded-xl hover:text-yellow-500'>Potree Model</div>
         </Sprite>
-      </PotreeModel>
+      </PotreeModel> */}
       <Model
         modelPath='models/planet_o.glb'
         rigidPos={[5, 5, -30]}
