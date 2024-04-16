@@ -12,7 +12,7 @@ export type AnnotationType = {
 
 const pointScalar = new Cesium.NearFarScalar(20, 0.7, 1000, 0)
 const angleOffset = 0.00001
-const heightOffset = 50
+const heightOffset = 0
 
 
 export const ResiumAnnotations = () => {
@@ -50,7 +50,7 @@ export const ResiumAnnotations = () => {
           scaleByDistance={pointScalar}
           color={Cesium.Color.RED}
           pixelSize={20}
-          disableDepthTestDistance={Number.POSITIVE_INFINITY}
+        // disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
       </Resium.Entity>
       <Resium.Entity>
@@ -66,7 +66,7 @@ export const ResiumAnnotations = () => {
           scaleByDistance={pointScalar}
           color={Cesium.Color.RED}
           pixelSize={20}
-          disableDepthTestDistance={Number.POSITIVE_INFINITY}
+        // disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
       </Resium.Entity>
     </Fragment>,

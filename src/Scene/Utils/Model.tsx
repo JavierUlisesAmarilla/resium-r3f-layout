@@ -1,15 +1,15 @@
 /* eslint-disable react/no-unknown-property */
-import { Euler, Vector3, useFrame, useThree } from '@react-three/fiber'
-import { Boolean3Array, RapierRigidBody, RigidBody, RigidBodyAutoCollider, vec3 } from '@react-three/rapier'
-import { useGesture } from '@use-gesture/react'
-import { AnimatePresence } from 'framer-motion'
-import { motion } from 'framer-motion-3d'
-import { ReactNode, useEffect, useRef } from 'react'
+import {Euler, Vector3, useFrame, useThree} from '@react-three/fiber'
+import {Boolean3Array, RapierRigidBody, RigidBody, RigidBodyAutoCollider, vec3} from '@react-three/rapier'
+import {useGesture} from '@use-gesture/react'
+import {AnimatePresence} from 'framer-motion'
+import {motion} from 'framer-motion-3d'
+import {ReactNode, useEffect, useRef} from 'react'
 import * as THREE from 'three'
-import { useCameraUtils } from '../../hooks/useCameraUtils'
-import { useCustomGltf } from '../../hooks/useCustomGltf'
-import { useZustand } from '../../store/useZustand'
-import { AXES_LENGTH } from '../../utils/constants'
+import {useCameraUtils} from '../../hooks/useCameraUtils'
+import {useCustomGltf} from '../../hooks/useCustomGltf'
+import {useZustand} from '../../store/useZustand'
+import {AXES_LENGTH} from '../../utils/constants'
 
 
 const worldPos = new THREE.Vector3()

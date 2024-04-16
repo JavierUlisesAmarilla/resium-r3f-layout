@@ -60,7 +60,7 @@ export const ResiumBillboard = ({
     setBillboardCanvas(canvas)
   }, [backgroundColor, fontColor, fontFamily, fontSize, paddingX, paddingY, text])
 
-  return billboardCanvas && show && (
+  return (billboardCanvas && show) ? (
     <Resium.BillboardCollection modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(position)}>
       <Resium.Billboard
         position={Cesium.Cartesian3.ZERO}
@@ -69,5 +69,7 @@ export const ResiumBillboard = ({
         disableDepthTestDistance={Number.POSITIVE_INFINITY}
       />
     </Resium.BillboardCollection>
+  ) : (
+    <></>
   )
 }

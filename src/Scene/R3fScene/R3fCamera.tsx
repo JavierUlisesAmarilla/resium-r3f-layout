@@ -1,8 +1,8 @@
-import { PerspectiveCamera } from '@react-three/drei'
-import { useEffect, useRef } from 'react'
-import { PerspectiveCamera as TPC } from 'three'
-import { useZustand } from '../../store/useZustand'
-import { DEFAULT_CAMERA_DISTANCE } from '../../utils/constants'
+import {PerspectiveCamera} from '@react-three/drei'
+import {useEffect, useRef} from 'react'
+import {PerspectiveCamera as TPC} from 'three'
+import {useZustand} from '../../store/useZustand'
+import {DEFAULT_CAMERA_DISTANCE} from '../../utils/constants'
 
 
 export const R3fCamera = () => {
