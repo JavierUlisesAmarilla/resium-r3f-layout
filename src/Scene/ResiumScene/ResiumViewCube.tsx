@@ -8,7 +8,7 @@ import './ResiumViewCube.css'
 
 export const ResiumViewCube = () => {
   const cubeRef = useRef<HTMLDivElement>(null)
-  const {resiumViewer, tileset, setIsViewCubeBeingUsed} = useZustand()
+  const {resiumViewer, tileset, setIsResiumCameraBeingUsed} = useZustand()
 
   const flyResiumCameraToEntity = (heading = 0, pitch = 0) => {
     if (!resiumViewer || !tileset) {
@@ -16,13 +16,13 @@ export const ResiumViewCube = () => {
     }
 
     const range = tileset.boundingSphere.radius * 2
-    setIsViewCubeBeingUsed(true)
+    setIsResiumCameraBeingUsed(true)
 
     resiumViewer.flyTo(tileset, {
       offset: new Cesium.HeadingPitchRange(heading, pitch, range),
       maximumHeight: 0,
     }).then(() => {
-      setIsViewCubeBeingUsed(false)
+      setIsResiumCameraBeingUsed(false)
     })
   }
 

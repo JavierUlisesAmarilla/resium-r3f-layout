@@ -23,7 +23,7 @@ export const useCameraUtils = () => {
     areAllEventsOnLockDown, setAreAllEventsOnLockDown,
     centerCartesian3,
     tileset,
-    isViewCubeBeingUsed,
+    isResiumCameraBeingUsed, setIsResiumCameraBeingUsed,
     isR3fCameraInSync, setIsR3fCameraInSync,
   } = useZustand()
   const {navigationMode} = useControls(controls)
@@ -99,7 +99,7 @@ export const useCameraUtils = () => {
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isViewCubeBeingUsed)) {
+    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed)) {
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
@@ -125,7 +125,7 @@ export const useCameraUtils = () => {
         setIsR3fCameraInSync(true)
       }
     }
-  }, [centerCartesian3, isR3fCameraInSync, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setIsR3fCameraInSync, syncFieldOfView])
+  }, [centerCartesian3, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setIsR3fCameraInSync, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
@@ -202,12 +202,22 @@ export const useCameraUtils = () => {
       entityPosition = getCenterPosition(positionArr)
     }
 
+    setIsResiumCameraBeingUsed(true)
+
     if (entityPosition) {
       const entityCartographic = Cesium.Cartographic.fromCartesian(entityPosition)
       const targetPosition = Cesium.Cartesian3.fromRadians(entityCartographic.longitude, entityCartographic.latitude, entityCartographic.height + height)
-      resiumViewer.camera.flyTo({destination: targetPosition, maximumHeight: 0})
+      resiumViewer.camera.flyTo({
+        destination: targetPosition,
+        maximumHeight: 0,
+        complete: () => {
+          setIsResiumCameraBeingUsed(false)
+        },
+      })
     } else {
-      resiumViewer.flyTo(entity, {maximumHeight: 0})
+      resiumViewer.flyTo(entity, {maximumHeight: 0}).then(() => {
+        setIsResiumCameraBeingUsed(false)
+      })
     }
   }
 
@@ -251,7 +261,6 @@ export const useCameraUtils = () => {
     animateR3fZoomToTarget,
     animateR3fZoomToDefault,
     syncR3fToResium,
-    syncResiumToR3f,
     flyResiumCameraToEntity,
     zoomR3f,
   }

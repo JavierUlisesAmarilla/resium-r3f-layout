@@ -11,8 +11,8 @@ export const R3fAssets = () => {
       {/* <PotreeModel
         fileName='cloud.js'
         baseUrl='http://5.9.65.151/mschuetz/potree/resources/pointclouds/weiss/subsea_equipment/'
-        modelPos={[-30, -10, -5]}
-        modelRot={[-Math.PI / 2, 0, 0]}
+        modelPosition={[-30, -10, -5]}
+        modelRotation={[-Math.PI / 2, 0, 0]}
         modelScale={0.5}
       >
         <Sprite
@@ -24,7 +24,7 @@ export const R3fAssets = () => {
       </PotreeModel> */}
       <Model
         modelPath='models/planet_o.glb'
-        rigidPos={[5, 5, -30]}
+        rigidPosition={[5, 5, -30]}
         rigidScale={0.05}
       >
         <Sprite

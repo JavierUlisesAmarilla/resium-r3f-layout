@@ -18,11 +18,11 @@ const worldPos = new THREE.Vector3()
 export type ModelType = {
   modelPath: string
   children?: ReactNode
-  rigidPos?: Vector3
-  rigidRot?: Euler
+  rigidPosition?: Vector3
+  rigidRotation?: Euler
   rigidScale?: Vector3
-  modelPos?: Vector3
-  modelRot?: Euler
+  modelPosition?: Vector3
+  modelRotation?: Euler
   modelScale?: Vector3
   visible?: boolean
   usePhysics?: boolean
@@ -31,7 +31,7 @@ export type ModelType = {
   enabledTranslations?: Boolean3Array
   enableZoom?: boolean
   zoomDistance?: number
-  showModelAnim?: boolean
+  showModelAnimation?: boolean
   showAxesHelper?: boolean
   useCloneGltf?: boolean
   useMotion?: boolean
@@ -41,11 +41,11 @@ export type ModelType = {
 export const Model = ({
   modelPath,
   children,
-  rigidPos = [0, 0, 0],
-  rigidRot = [0, 0, 0],
+  rigidPosition = [0, 0, 0],
+  rigidRotation = [0, 0, 0],
   rigidScale = 1,
-  modelPos = [0, 0, 0],
-  modelRot = [0, 0, 0],
+  modelPosition = [0, 0, 0],
+  modelRotation = [0, 0, 0],
   modelScale = 1,
   visible = true,
   usePhysics = false,
@@ -54,7 +54,7 @@ export const Model = ({
   enabledTranslations = [true, true, true],
   enableZoom = false,
   zoomDistance = 10,
-  showModelAnim = true,
+  showModelAnimation = true,
   showAxesHelper = false,
   useCloneGltf = false,
   useMotion = false,
@@ -81,8 +81,8 @@ export const Model = ({
         const distance = camera.position.distanceTo(worldPos)
 
         if (distance > zoomDistance) {
-          const direc = worldPos.clone().sub(camera.position).multiplyScalar((distance - (zoomDistance * 0.9)) / distance)
-          const cameraTarget = camera.position.clone().add(direc)
+          const direction = worldPos.clone().sub(camera.position).multiplyScalar((distance - (zoomDistance * 0.9)) / distance)
+          const cameraTarget = camera.position.clone().add(direction)
           animateR3fZoomToTarget(cameraTarget)
         }
       }
@@ -90,12 +90,12 @@ export const Model = ({
   })
 
   useEffect(() => {
-    if (actions && showModelAnim) {
+    if (actions && showModelAnimation) {
       Object.values(actions).forEach((action) => {
         action.play()
       })
     }
-  }, [actions, showModelAnim])
+  }, [actions, showModelAnimation])
 
   useFrame((_state, delta) => {
     if (mixer) {
@@ -109,8 +109,8 @@ export const Model = ({
         <RigidBody
           ref={rigidBodyRef}
           colliders={colliders}
-          position={rigidPos || [0, 0, 0]}
-          rotation={rigidRot || [0, 0, 0]}
+          position={rigidPosition || [0, 0, 0]}
+          rotation={rigidRotation || [0, 0, 0]}
           scale={rigidScale || 1}
           enabledRotations={enabledRotations}
           enabledTranslations={enabledTranslations}
@@ -118,8 +118,8 @@ export const Model = ({
         >
           <motion.primitive
             object={modelScene}
-            position={modelPos || [0, 0, 0]}
-            rotation={modelRot || [0, 0, 0]}
+            position={modelPosition || [0, 0, 0]}
+            rotation={modelRotation || [0, 0, 0]}
             visible={visible}
             initial={{
               scale: useMotion ? 0 : realModelScale,
@@ -136,14 +136,14 @@ export const Model = ({
         </RigidBody> :
         <group
           ref={groupRef}
-          position={rigidPos || [0, 0, 0]}
-          rotation={rigidRot || [0, 0, 0]}
+          position={rigidPosition || [0, 0, 0]}
+          rotation={rigidRotation || [0, 0, 0]}
           scale={rigidScale || 1}
         >
           <motion.primitive
             object={modelScene}
-            position={modelPos || [0, 0, 0]}
-            rotation={modelRot || [0, 0, 0]}
+            position={modelPosition || [0, 0, 0]}
+            rotation={modelRotation || [0, 0, 0]}
             visible={visible}
             initial={{
               scale: useMotion ? 0 : realModelScale,
