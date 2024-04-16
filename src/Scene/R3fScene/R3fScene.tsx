@@ -11,9 +11,11 @@ import {R3fWorld} from './R3fWorld'
 
 export const R3fScene = ({
   onPointerDown,
+  onPointerMove,
   onPointerUp,
 }: {
   onPointerDown: MouseEventHandler
+  onPointerMove: MouseEventHandler
   onPointerUp: MouseEventHandler
 }) => {
   const {navigationMode} = useControls(controls)
@@ -23,6 +25,7 @@ export const R3fScene = ({
       <Canvas
         className={`${navigationMode !== 'orbitControls' && '!pointer-events-none'}`}
         onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
         <R3fLight/>

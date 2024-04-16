@@ -28,6 +28,18 @@ export const Scene = ({
     }))
   }
 
+  const onPointerMove = (e: React.PointerEvent) => {
+    resiumViewer?.canvas.dispatchEvent(new PointerEvent('pointermove', {
+      pointerId: e.pointerId,
+      bubbles: e.bubbles,
+      cancelable: e.cancelable,
+      clientX: e.clientX,
+      clientY: e.clientY,
+      screenX: e.screenX,
+      screenY: e.screenY,
+    }))
+  }
+
   const onPointerUp = (e: React.PointerEvent) => {
     resiumViewer?.canvas.dispatchEvent(new PointerEvent('pointerup', {
       pointerId: e.pointerId,
@@ -48,6 +60,7 @@ export const Scene = ({
       />
       <R3fScene
         onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       />
     </div>
