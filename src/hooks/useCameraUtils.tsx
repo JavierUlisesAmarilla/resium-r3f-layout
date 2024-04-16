@@ -97,21 +97,24 @@ export const useCameraUtils = () => {
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
       pickCartesian2.y = canvasRect.height / 2
-      const pickRay = resiumCamera.getPickRay(pickCartesian2)
+      let pickCartesian3 = resiumScene.pickPosition(pickCartesian2)
 
-      if (pickRay) {
-        const pickCartesian3 = resiumScene.globe.pick(pickRay, resiumScene)
-
-        if (pickCartesian3) {
-          const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
-          if (centerDistance > DEFAULT_TARGET_DISTANCE) {
-            Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
-          }
-          const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
-          r3fCamera.position.copy(r3fCameraPosition)
-          const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
-          r3fControls.target.copy(targetPosition)
+      if (!pickCartesian3) {
+        const pickRay = resiumCamera.getPickRay(pickCartesian2)
+        if (pickRay) {
+          pickCartesian3 = resiumScene.globe.pick(pickRay, resiumScene)!
         }
+      }
+
+      if (pickCartesian3) {
+        const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
+        if (centerDistance > DEFAULT_TARGET_DISTANCE) {
+          Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
+        }
+        const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
+        r3fCamera.position.copy(r3fCameraPosition)
+        const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
+        r3fControls.target.copy(targetPosition)
       }
     }
   }, [centerCartesian3, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
