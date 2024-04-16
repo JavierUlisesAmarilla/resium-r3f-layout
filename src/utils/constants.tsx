@@ -1,4 +1,4 @@
-export const SHOW_AXES_HELPER = true
+export const SHOW_AXES_HELPER = false
 export const AXES_LENGTH = 100
 export const ANGLE_TOLERANCE_FACTOR = 0.01
 export const ANIM_DURATION = 1
