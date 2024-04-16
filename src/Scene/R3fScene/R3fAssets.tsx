@@ -1,9 +1,12 @@
+import {useZustand} from '../../store/useZustand'
 import {Model} from '../Utils/Model'
 import {Sprite} from '../Utils/Sprite'
 
 
 export const R3fAssets = () => {
-  return (
+  const {isR3fCameraInSync} = useZustand()
+
+  return isR3fCameraInSync && (
     <>
       {/* <PotreeModel
         fileName='cloud.js'

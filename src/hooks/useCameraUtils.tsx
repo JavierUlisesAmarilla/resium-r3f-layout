@@ -16,7 +16,16 @@ const pickCartesian2 = new Cesium.Cartesian2()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3, tileset, isViewCubeBeingUsed} = useZustand()
+  const {
+    resiumViewer,
+    r3fControlsRef,
+    r3fCamera,
+    areAllEventsOnLockDown, setAreAllEventsOnLockDown,
+    centerCartesian3,
+    tileset,
+    isViewCubeBeingUsed,
+    isR3fCameraInSync, setIsR3fCameraInSync,
+  } = useZustand()
   const {navigationMode} = useControls(controls)
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
@@ -115,9 +124,14 @@ export const useCameraUtils = () => {
         r3fCamera.position.copy(r3fCameraPosition)
         const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
         r3fControls.target.copy(targetPosition)
+        if (!isR3fCameraInSync) {
+          setIsR3fCameraInSync(true)
+        }
+      } else if (isR3fCameraInSync) {
+        setIsR3fCameraInSync(false)
       }
     }
-  }, [centerCartesian3, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
+  }, [centerCartesian3, isR3fCameraInSync, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setIsR3fCameraInSync, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {

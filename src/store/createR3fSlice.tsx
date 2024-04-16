@@ -10,6 +10,9 @@ export type R3fSlice = {
 
   r3fCamera: PerspectiveCamera | OrthographicCamera | null
   setR3fCamera: (r3fCamera: PerspectiveCamera | OrthographicCamera | null) => void
+
+  isR3fCameraInSync: boolean
+  setIsR3fCameraInSync: (isR3fCameraInSync: boolean) => void
 }
 
 
@@ -20,5 +23,8 @@ export const createR3fSlice: ZustandSlice<R3fSlice> = (set) => {
 
     r3fCamera: null,
     setR3fCamera: (r3fCamera) => set(() => ({r3fCamera})),
+
+    isR3fCameraInSync: false,
+    setIsR3fCameraInSync: (isR3fCameraInSync) => set(() => ({isR3fCameraInSync})),
   }
 }
