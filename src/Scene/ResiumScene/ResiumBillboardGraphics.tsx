@@ -7,7 +7,7 @@ import * as Resium from 'resium'
 const scaleByDistance = new Cesium.NearFarScalar(0, 1, 1000, 0)
 
 
-export const ResiumBillboard = ({
+export const ResiumBillboardGraphics = ({
   position,
   show = true,
   text = '',
@@ -61,13 +61,12 @@ export const ResiumBillboard = ({
   }, [backgroundColor, fontColor, fontFamily, fontSize, paddingX, paddingY, text])
 
   return billboardCanvas && show && (
-    <Resium.BillboardCollection modelMatrix={Cesium.Transforms.eastNorthUpToFixedFrame(position)}>
-      <Resium.Billboard
-        position={Cesium.Cartesian3.ZERO}
+    <Resium.Entity position={position}>
+      <Resium.BillboardGraphics
         image={billboardCanvas}
         scaleByDistance={scaleByDistance}
         disableDepthTestDistance={Number.POSITIVE_INFINITY}
       />
-    </Resium.BillboardCollection>
+    </Resium.Entity>
   )
 }
