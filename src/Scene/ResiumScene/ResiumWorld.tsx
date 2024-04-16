@@ -32,7 +32,6 @@ export const ResiumWorld = ({
         enableInputs={true}
         enableLook={false}
         inertiaZoom={0}
-        maximumZoomDistance={5000}
       />
       <Resium.Cesium3DTileset
         url={tilesetUrl}
