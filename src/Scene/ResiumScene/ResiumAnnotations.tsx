@@ -2,6 +2,7 @@ import * as Cesium from 'cesium'
 import {Fragment, useEffect, useState} from 'react'
 import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
+import {ResiumBillboard} from './ResiumBillboard'
 
 
 export type AnnotationType = {
@@ -69,6 +70,10 @@ export const ResiumAnnotations = () => {
         // disableDepthTestDistance={Number.POSITIVE_INFINITY}
         />
       </Resium.Entity>
+      <ResiumBillboard
+        position={Cesium.Cartesian3.lerp(annotation.startPoint, annotation.endPoint, 0.5, new Cesium.Cartesian3())}
+        text={`Billboard ${index}`}
+      />
     </Fragment>,
   )
 }

@@ -4,7 +4,6 @@ import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
 import {ResiumAnnotations} from './ResiumAnnotations'
-import {ResiumBillboard} from './ResiumBillboard'
 
 
 export const ResiumWorld = ({
@@ -15,7 +14,7 @@ export const ResiumWorld = ({
   tilesetUrl: Cesium.IonResource
 }) => {
   const {viewer} = Resium.useCesium()
-  const {setResiumViewer, tileset, setTileset, setCenterCartesian3} = useZustand()
+  const {setResiumViewer, setTileset, setCenterCartesian3} = useZustand()
 
   useEffect(() => {
     if (viewer) {
@@ -51,12 +50,6 @@ export const ResiumWorld = ({
         }}
       />
       <ResiumAnnotations/>
-      {tileset &&
-        <ResiumBillboard
-          position={tileset.boundingSphere.center}
-          text='Billboard'
-        />
-      }
     </>
   )
 }
