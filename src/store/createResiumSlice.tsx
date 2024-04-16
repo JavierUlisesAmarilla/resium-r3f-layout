@@ -11,6 +11,9 @@ export type ResiumSlice = {
 
   centerCartesian3: Cesium.Cartesian3 | undefined
   setCenterCartesian3: (centerCartesian3: Cesium.Cartesian3 | undefined) => void
+
+  isViewCubeBeingUsed: boolean
+  setIsViewCubeBeingUsed: (isViewCubeBeingUsed: boolean) => void
 }
 
 
@@ -24,5 +27,8 @@ export const createResiumSlice: ZustandSlice<ResiumSlice> = (set) => {
 
     centerCartesian3: undefined,
     setCenterCartesian3: (centerCartesian3) => set(() => ({centerCartesian3})),
+
+    isViewCubeBeingUsed: false,
+    setIsViewCubeBeingUsed: (isViewCubeBeingUsed) => set(() => ({isViewCubeBeingUsed})),
   }
 }

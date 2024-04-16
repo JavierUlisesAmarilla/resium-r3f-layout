@@ -16,7 +16,7 @@ const pickCartesian2 = new Cesium.Cartesian2()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3, tileset} = useZustand()
+  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3, tileset, isViewCubeBeingUsed} = useZustand()
   const {navigationMode} = useControls(controls)
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
@@ -77,8 +77,9 @@ export const useCameraUtils = () => {
 
   // Synchronize r3f camera to resium camera.
   const syncR3fToResium = useCallback(() => {
-    if (resiumCamera && r3fControls && navigationMode === 'orbitControls') {
+    if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls') {
       // console.log('useCameraUtils#syncR3fToResium')
+      resiumScene.screenSpaceCameraController.enableInputs = false
       syncFieldOfView()
       const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
@@ -86,11 +87,11 @@ export const useCameraUtils = () => {
       const range = r3fControls.getDistance()
       resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
     }
-  }, [centerCartesian3, navigationMode, r3fControls, resiumCamera, syncFieldOfView])
+  }, [centerCartesian3, navigationMode, r3fControls, resiumCamera, resiumScene, syncFieldOfView])
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'mapControls') {
+    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isViewCubeBeingUsed)) {
       // console.log('useCameraUtils#syncResiumToR3f')
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
@@ -113,7 +114,7 @@ export const useCameraUtils = () => {
         }
       }
     }
-  }, [centerCartesian3, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
+  }, [centerCartesian3, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {

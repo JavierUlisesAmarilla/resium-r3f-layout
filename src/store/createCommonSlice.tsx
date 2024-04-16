@@ -1,4 +1,4 @@
-import { ZustandSlice } from './useZustand'
+import {ZustandSlice} from './useZustand'
 
 
 export type CommonSlice = {
