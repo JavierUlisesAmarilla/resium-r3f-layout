@@ -16,7 +16,7 @@ const pickCartesian2 = new Cesium.Cartesian2()
 
 
 export const useCameraUtils = () => {
-  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3} = useZustand()
+  const {resiumViewer, r3fControlsRef, r3fCamera, areAllEventsOnLockDown, setAreAllEventsOnLockDown, centerCartesian3, tileset} = useZustand()
   const {navigationMode} = useControls(controls)
   const resiumScene = resiumViewer?.scene
   const resiumCamera = resiumViewer?.camera
@@ -91,6 +91,7 @@ export const useCameraUtils = () => {
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
     if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'mapControls') {
+      // console.log('useCameraUtils#syncResiumToR3f')
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
@@ -106,7 +107,6 @@ export const useCameraUtils = () => {
             Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
           }
           const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
-          // console.log('useCameraUtils#syncResiumToR3f: r3fCameraPosition:', r3fCameraPosition)
           r3fCamera.position.copy(r3fCameraPosition)
           const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
           r3fControls.target.copy(targetPosition)
@@ -222,9 +222,16 @@ export const useCameraUtils = () => {
 
   useEffect(() => {
     if (resiumScene) {
-      resiumScene.screenSpaceCameraController.enableInputs = navigationMode === 'mapControls'
+      if (navigationMode === 'mapControls') {
+        resiumScene.screenSpaceCameraController.enableInputs = true
+        if (tileset) {
+          resiumViewer.zoomTo(tileset)
+        }
+      } else {
+        resiumScene.screenSpaceCameraController.enableInputs = false
+      }
     }
-  }, [navigationMode, resiumScene])
+  }, [navigationMode, resiumScene, resiumViewer, tileset])
 
   return {
     animateR3fLookAt,

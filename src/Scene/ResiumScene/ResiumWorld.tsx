@@ -40,7 +40,7 @@ export const ResiumWorld = ({
         // debugShowBoundingVolume
         onReady={async (newTileset) => {
           await clampTilesetToTerrain(terrainProvider, newTileset)
-          viewer?.zoomTo(newTileset, new Cesium.HeadingPitchRange(0.5, -0.5, newTileset.boundingSphere.radius * 3))
+          // viewer?.zoomTo(newTileset)
           setTileset(newTileset)
           setCenterCartesian3(newTileset.boundingSphere.center)
         }}
