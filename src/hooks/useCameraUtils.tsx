@@ -87,7 +87,6 @@ export const useCameraUtils = () => {
   // Synchronize r3f camera to resium camera.
   const syncR3fToResium = useCallback(() => {
     if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls') {
-      // console.log('useCameraUtils#syncR3fToResium')
       resiumScene.screenSpaceCameraController.enableInputs = false
       syncFieldOfView()
       const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
@@ -101,34 +100,29 @@ export const useCameraUtils = () => {
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
     if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isViewCubeBeingUsed)) {
-      // console.log('useCameraUtils#syncResiumToR3f')
       syncFieldOfView()
       const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
       pickCartesian2.y = canvasRect.height / 2
-      let pickCartesian3 = resiumScene.pickPosition(pickCartesian2)
+      const pickCartesian3 = new Cesium.Cartesian3()
+      resiumScene.pickPosition(pickCartesian2, pickCartesian3)
 
-      if (!pickCartesian3) {
-        const pickRay = resiumCamera.getPickRay(pickCartesian2)
-        if (pickRay) {
-          pickCartesian3 = resiumScene.globe.pick(pickRay, resiumScene)!
-        }
+      if (pickCartesian3.equals(Cesium.Cartesian3.ZERO)) {
+        const resiumCameraDirection = new Cesium.Cartesian3()
+        Cesium.Cartesian3.multiplyByScalar(resiumCamera.directionWC, DEFAULT_TARGET_DISTANCE, resiumCameraDirection)
+        Cesium.Cartesian3.add(resiumCamera.positionWC, resiumCameraDirection, pickCartesian3)
       }
 
-      if (pickCartesian3) {
-        const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
-        if (centerDistance > DEFAULT_TARGET_DISTANCE) {
-          Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
-        }
-        const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
-        r3fCamera.position.copy(r3fCameraPosition)
-        const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
-        r3fControls.target.copy(targetPosition)
-        if (!isR3fCameraInSync) {
-          setIsR3fCameraInSync(true)
-        }
-      } else if (isR3fCameraInSync) {
-        setIsR3fCameraInSync(false)
+      const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
+      if (centerDistance > DEFAULT_TARGET_DISTANCE) {
+        Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
+      }
+      const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
+      r3fCamera.position.copy(r3fCameraPosition)
+      const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
+      r3fControls.target.copy(targetPosition)
+      if (!isR3fCameraInSync) {
+        setIsR3fCameraInSync(true)
       }
     }
   }, [centerCartesian3, isR3fCameraInSync, isViewCubeBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setIsR3fCameraInSync, syncFieldOfView])
