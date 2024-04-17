@@ -22,7 +22,6 @@ export const useCameraUtils = () => {
     r3fCamera,
     areAllEventsOnLockDown, setAreAllEventsOnLockDown,
     centerCartesian3,
-    tileset,
     isResiumCameraBeingUsed, setIsResiumCameraBeingUsed,
     isR3fCameraInSync, setIsR3fCameraInSync,
   } = useZustand()
@@ -246,14 +245,12 @@ export const useCameraUtils = () => {
     if (resiumScene) {
       if (navigationMode === 'mapControls') {
         resiumScene.screenSpaceCameraController.enableInputs = true
-        if (tileset) {
-          resiumViewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
-        }
+        resiumViewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
       } else {
         resiumScene.screenSpaceCameraController.enableInputs = false
       }
     }
-  }, [navigationMode, resiumScene, resiumViewer, tileset])
+  }, [navigationMode, resiumScene, resiumViewer])
 
   return {
     animateR3fLookAt,
