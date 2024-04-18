@@ -102,3 +102,21 @@ export const getCenterPosition = (positionArr: Cesium.Cartesian3[]) => {
   )
   return centerPosition
 }
+
+
+// Convert cesium based columbus cartesian to three.js based position.
+export const cesiumColumbusToThreePosition = (columbus: Cesium.Cartesian3, centerColumbus: Cesium.Cartesian3) => {
+  const threePosition = new Vector3(
+      columbus.y - centerColumbus.y,
+      columbus.x - centerColumbus.x,
+      centerColumbus.z - columbus.z,
+  )
+  return threePosition
+}
+
+
+// Convert cesium based columbus direction to three.js based direction.
+export const cesiumColumbusDirectionToThreeDirection = (columbusDirection: Cesium.Cartesian3) => {
+  const threeDirection = new Vector3(columbusDirection.y, columbusDirection.x, -columbusDirection.z)
+  return threeDirection
+}

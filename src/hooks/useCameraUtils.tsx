@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 import * as Cesium from 'cesium'
 import gsap from 'gsap'
 import {useControls} from 'leva'
 import {useCallback, useEffect} from 'react'
 import {Box3, MathUtils, Mesh, OrthographicCamera, PerspectiveCamera, Vector3} from 'three'
 import {useZustand} from '../store/useZustand'
-import {cesiumCartesian3ToThreePosition, getAngle, getCenterPosition, normalizeAngle, threePositionToCesiumMatrix4} from '../utils/common'
+import {cesiumCartesian3ToThreePosition, cesiumColumbusDirectionToThreeDirection, cesiumColumbusToThreePosition, getAngle, getCenterPosition, normalizeAngle, threePositionToCesiumMatrix4} from '../utils/common'
 import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_NEAR, DEFAULT_CAMERA_DISTANCE, DEFAULT_TARGET_DISTANCE, ROT_ANIM_FACTOR, SCENE_MODE, SHOW_AXES_HELPER} from '../utils/constants'
 import {controls} from '../utils/controls'
 
@@ -22,6 +23,7 @@ export const useCameraUtils = () => {
     r3fCamera,
     areAllEventsOnLockDown, setAreAllEventsOnLockDown,
     centerCartesian3,
+    centerColumbus, setCenterColumbus,
     isResiumCameraBeingUsed, setIsResiumCameraBeingUsed,
     isR3fCameraInSync, setIsR3fCameraInSync,
   } = useZustand()
@@ -51,13 +53,13 @@ export const useCameraUtils = () => {
           resiumCameraFrustum.fov = resiumFovX
         }
       } else if (r3fCamera instanceof OrthographicCamera) {
-        if (!(resiumCamera.frustum instanceof Cesium.OrthographicFrustum)) {
-          resiumCamera.switchToOrthographicFrustum()
-        }
-        // This is experimental yet.
-        const resiumOrthoFrustum = resiumCamera.frustum as Cesium.OrthographicFrustum
-        resiumOrthoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
-        resiumOrthoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
+        // // This is experimental yet.
+        // if (!(resiumCamera.frustum instanceof Cesium.OrthographicFrustum)) {
+        //   resiumCamera.switchToOrthographicFrustum()
+        // }
+        // const resiumOrthoFrustum = resiumCamera.frustum as Cesium.OrthographicFrustum
+        // resiumOrthoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
+        // resiumOrthoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
       }
     }
   }, [r3fCamera, resiumCamera])
@@ -88,11 +90,16 @@ export const useCameraUtils = () => {
     if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls' && centerCartesian3) {
       resiumScene.screenSpaceCameraController.enableInputs = false
       syncFieldOfView()
-      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
       const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
       const range = r3fControls.getDistance()
-      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
+
+      if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
+        const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
+        resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
+      } else if (SCENE_MODE === Cesium.SceneMode.COLUMBUS_VIEW) {
+        //
+      }
     }
   }, [centerCartesian3, navigationMode, r3fControls, resiumCamera, resiumScene, syncFieldOfView])
 
@@ -118,13 +125,23 @@ export const useCameraUtils = () => {
         r3fCamera.position.copy(r3fCameraPosition)
         const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
         r3fControls.target.copy(targetPosition)
+      } else if (SCENE_MODE === Cesium.SceneMode.COLUMBUS_VIEW) {
+        if (centerColumbus) {
+          const r3fCameraPosition = cesiumColumbusToThreePosition(resiumCamera.positionWC, centerColumbus)
+          r3fCamera.position.copy(r3fCameraPosition)
+          const r3fCameraDirection = cesiumColumbusDirectionToThreeDirection(resiumCamera.directionWC)
+          const targetPosition = r3fCameraPosition.clone().add(r3fCameraDirection)
+          r3fControls.target.copy(targetPosition)
+        } else {
+          setCenterColumbus(resiumCamera.positionWC.clone())
+        }
       }
 
       if (!isR3fCameraInSync) {
         setIsR3fCameraInSync(true)
       }
     }
-  }, [centerCartesian3, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, setIsR3fCameraInSync, syncFieldOfView])
+  }, [centerCartesian3, centerColumbus, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, setCenterColumbus, setIsR3fCameraInSync, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
