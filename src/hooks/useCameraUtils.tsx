@@ -107,7 +107,7 @@ export const useCameraUtils = () => {
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3 && tileset) {
+    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3) {
       syncFieldOfView()
 
       if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
@@ -151,7 +151,7 @@ export const useCameraUtils = () => {
         setIsR3fCameraInSync(true)
       }
     }
-  }, [centerCartesian3, centerColumbus, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setCenterColumbus, setIsR3fCameraInSync, syncFieldOfView, tileset])
+  }, [centerCartesian3, centerColumbus, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setCenterColumbus, setIsR3fCameraInSync, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
