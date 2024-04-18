@@ -36,30 +36,28 @@ export const useCameraUtils = () => {
   const syncFieldOfView = useCallback(() => {
     if (r3fCamera && resiumCamera) {
       if (r3fCamera instanceof PerspectiveCamera) {
-        if (!(resiumCamera.frustum instanceof Cesium.PerspectiveFrustum)) {
-          resiumCamera.switchToPerspectiveFrustum()
-        }
-        const r3fCameraAspect = r3fCamera.aspect
-        const r3fCameraFov = r3fCamera.fov
-        const resiumCameraFrustum = resiumCamera.frustum as Cesium.PerspectiveFrustum
-        resiumCameraFrustum.near = CAMERA_NEAR
+        if (resiumCamera.frustum instanceof Cesium.PerspectiveFrustum) {
+          const r3fCameraAspect = r3fCamera.aspect
+          const r3fCameraFov = r3fCamera.fov
+          const resiumCameraFrustum = resiumCamera.frustum as Cesium.PerspectiveFrustum
+          resiumCameraFrustum.near = CAMERA_NEAR
 
-        // R3f camera's field of view is actual angle, not radians. So need to convert it to radians to synchronize with Resium camera.
-        if (r3fCameraAspect < 1) { // When portrait mode
-          resiumCameraFrustum.fov = Math.PI * (r3fCameraFov / 180)
-        } else { // When landscape mode
-          const resiumFovY = Math.PI * (r3fCameraFov / 180)
-          const resiumFovX = Math.atan(Math.tan(0.5 * resiumFovY) * r3fCameraAspect) * 2
-          resiumCameraFrustum.fov = resiumFovX
+          // R3f camera's field of view is actual angle, not radians. So need to convert it to radians to synchronize with Resium camera.
+          if (r3fCameraAspect < 1) { // When portrait mode
+            resiumCameraFrustum.fov = Math.PI * (r3fCameraFov / 180)
+          } else { // When landscape mode
+            const resiumFovY = Math.PI * (r3fCameraFov / 180)
+            const resiumFovX = Math.atan(Math.tan(0.5 * resiumFovY) * r3fCameraAspect) * 2
+            resiumCameraFrustum.fov = resiumFovX
+          }
         }
       } else if (r3fCamera instanceof OrthographicCamera) {
-        // // This is experimental yet.
-        // if (!(resiumCamera.frustum instanceof Cesium.OrthographicFrustum)) {
-        //   resiumCamera.switchToOrthographicFrustum()
+        // This is experimental yet.
+        // if (resiumCamera.frustum instanceof Cesium.OrthographicFrustum) {
+        //   const resiumOrthoFrustum = resiumCamera.frustum as Cesium.OrthographicFrustum
+        //   resiumOrthoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
+        //   resiumOrthoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
         // }
-        // const resiumOrthoFrustum = resiumCamera.frustum as Cesium.OrthographicFrustum
-        // resiumOrthoFrustum.aspectRatio = r3fCamera.right / r3fCamera.top
-        // resiumOrthoFrustum.width = (-r3fCamera.left + r3fCamera.right) / r3fCamera.zoom
       }
     }
   }, [r3fCamera, resiumCamera])
