@@ -12,7 +12,7 @@ export const One = () => {
       requestVertexNormals: true,
       requestWaterMask: true,
     }).then(setTerrainProvider)
-    Cesium.IonResource.fromAssetId(2482359).then(setTilesetUrl)
+    Cesium.IonResource.fromAssetId(2302071).then(setTilesetUrl)
   }, [])
 
   return terrainProvider && tilesetUrl && (
