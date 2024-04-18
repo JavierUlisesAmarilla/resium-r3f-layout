@@ -3,6 +3,7 @@
 import * as Cesium from 'cesium'
 import {useEffect, useRef} from 'react'
 import {useZustand} from '../../store/useZustand'
+import {SCENE_MODE} from '../../utils/constants'
 import './ResiumViewCube.css'
 
 
@@ -14,16 +15,25 @@ export const ResiumViewCube = () => {
     if (!resiumViewer || !tileset) {
       return
     }
-
     const range = tileset.boundingSphere.radius * 2
     setIsResiumCameraBeingUsed(true)
 
-    resiumViewer.flyTo(tileset, {
-      offset: new Cesium.HeadingPitchRange(heading, pitch, range),
-      maximumHeight: 0,
-    }).then(() => {
-      setIsResiumCameraBeingUsed(false)
-    })
+    switch (SCENE_MODE) {
+      case Cesium.SceneMode.SCENE3D:
+        resiumViewer.flyTo(tileset, {
+          offset: new Cesium.HeadingPitchRange(heading, pitch, range),
+          maximumHeight: 0,
+        }).then(() => {
+          setIsResiumCameraBeingUsed(false)
+        })
+        break
+      case Cesium.SceneMode.COLUMBUS_VIEW:
+        resiumViewer.zoomTo(tileset, new Cesium.HeadingPitchRange(heading, pitch, range))
+        break
+      default:
+        setIsResiumCameraBeingUsed(false)
+        break
+    }
   }
 
   useEffect(() => {
