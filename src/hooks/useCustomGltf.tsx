@@ -1,6 +1,7 @@
 import {useGLTF} from '@react-three/drei'
 import {useEffect, useState} from 'react'
 import {AnimationMixer, Object3D} from 'three'
+// @ts-expect-error - TODO
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils'
 import {AnimationActionMap} from '../utils/types'
 

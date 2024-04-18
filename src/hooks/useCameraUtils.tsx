@@ -98,9 +98,9 @@ export const useCameraUtils = () => {
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed)) {
+    if (resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed)) {
       syncFieldOfView()
-      const canvasRect = resiumViewer.scene.canvas.getBoundingClientRect()
+      const canvasRect = resiumScene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
       pickCartesian2.y = canvasRect.height / 2
       const pickCartesian3 = new Cesium.Cartesian3()
@@ -112,10 +112,6 @@ export const useCameraUtils = () => {
         Cesium.Cartesian3.add(resiumCamera.positionWC, resiumCameraDirection, pickCartesian3)
       }
 
-      const centerDistance = Cesium.Cartesian3.distance(resiumCamera.positionWC, pickCartesian3)
-      if (centerDistance > DEFAULT_TARGET_DISTANCE) {
-        Cesium.Cartesian3.lerp(resiumCamera.positionWC, pickCartesian3, DEFAULT_TARGET_DISTANCE / centerDistance, pickCartesian3)
-      }
       const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
       r3fCamera.position.copy(r3fCameraPosition)
       const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
@@ -124,7 +120,7 @@ export const useCameraUtils = () => {
         setIsR3fCameraInSync(true)
       }
     }
-  }, [centerCartesian3, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setIsR3fCameraInSync, syncFieldOfView])
+  }, [centerCartesian3, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, setIsR3fCameraInSync, syncFieldOfView])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
