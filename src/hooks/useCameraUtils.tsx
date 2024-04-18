@@ -5,7 +5,7 @@ import {useCallback, useEffect} from 'react'
 import {Box3, MathUtils, Mesh, OrthographicCamera, PerspectiveCamera, Vector3} from 'three'
 import {useZustand} from '../store/useZustand'
 import {cesiumCartesian3ToThreePosition, getAngle, getCenterPosition, normalizeAngle, threePositionToCesiumMatrix4} from '../utils/common'
-import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_NEAR, DEFAULT_CAMERA_DISTANCE, DEFAULT_TARGET_DISTANCE, ROT_ANIM_FACTOR, SHOW_AXES_HELPER} from '../utils/constants'
+import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_NEAR, DEFAULT_CAMERA_DISTANCE, DEFAULT_TARGET_DISTANCE, ROT_ANIM_FACTOR, SCENE_MODE, SHOW_AXES_HELPER} from '../utils/constants'
 import {controls} from '../utils/controls'
 
 
@@ -62,7 +62,7 @@ export const useCameraUtils = () => {
     }
   }, [r3fCamera, resiumCamera])
 
-  // Show axes helper for convenient development. (optional)
+  // Show axes helper for convenient development.
   const devUpdateResiumAxesHelper = useCallback((key: string, cartesian3: Cesium.Cartesian3) => {
     if (resiumScene) {
       if (SHOW_AXES_HELPER && cartesian3) {
@@ -100,22 +100,26 @@ export const useCameraUtils = () => {
   const syncResiumToR3f = useCallback(() => {
     if (resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3) {
       syncFieldOfView()
-      const canvasRect = resiumScene.canvas.getBoundingClientRect()
-      pickCartesian2.x = canvasRect.width / 2
-      pickCartesian2.y = canvasRect.height / 2
-      const pickCartesian3 = new Cesium.Cartesian3()
-      resiumScene.pickPosition(pickCartesian2, pickCartesian3)
 
-      if (pickCartesian3.equals(Cesium.Cartesian3.ZERO)) {
-        const resiumCameraDirection = new Cesium.Cartesian3()
-        Cesium.Cartesian3.multiplyByScalar(resiumCamera.directionWC, DEFAULT_TARGET_DISTANCE, resiumCameraDirection)
-        Cesium.Cartesian3.add(resiumCamera.positionWC, resiumCameraDirection, pickCartesian3)
+      if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
+        const canvasRect = resiumScene.canvas.getBoundingClientRect()
+        pickCartesian2.x = canvasRect.width / 2
+        pickCartesian2.y = canvasRect.height / 2
+        const pickCartesian3 = new Cesium.Cartesian3()
+        resiumScene.pickPosition(pickCartesian2, pickCartesian3)
+
+        if (pickCartesian3.equals(Cesium.Cartesian3.ZERO)) {
+          const resiumCameraDirection = new Cesium.Cartesian3()
+          Cesium.Cartesian3.multiplyByScalar(resiumCamera.directionWC, DEFAULT_TARGET_DISTANCE, resiumCameraDirection)
+          Cesium.Cartesian3.add(resiumCamera.positionWC, resiumCameraDirection, pickCartesian3)
+        }
+
+        const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
+        r3fCamera.position.copy(r3fCameraPosition)
+        const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
+        r3fControls.target.copy(targetPosition)
       }
 
-      const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
-      r3fCamera.position.copy(r3fCameraPosition)
-      const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
-      r3fControls.target.copy(targetPosition)
       if (!isR3fCameraInSync) {
         setIsR3fCameraInSync(true)
       }

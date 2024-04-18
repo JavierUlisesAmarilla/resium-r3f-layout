@@ -41,7 +41,7 @@ export const getTilesetMinBottomHeight = (rootTile: Cesium.Cesium3DTile) => {
 }
 
 
-// Attach tileset to earth's ground. (This is unnecessary for now)
+// Attach tileset to earth's ground.
 export const clampTilesetToTerrain = async (terrainProvider: Cesium.CesiumTerrainProvider, tileset: Cesium.Cesium3DTileset) => {
   const cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center)
   cartographic.height = 0
@@ -61,7 +61,7 @@ export const threePositionToCesiumMatrix4 = (threePosition: Vector3, centerCarte
 }
 
 
-// Convert cesium based matrix to three.js based position.
+// Convert cesium based cartesian to three.js based position.
 export const cesiumCartesian3ToThreePosition = (cartesian3: Cesium.Cartesian3, centerCartesian3: Cesium.Cartesian3) => {
   const cesiumMatrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(cartesian3)
   const centerCartesian3Matrix4 = Cesium.Transforms.eastNorthUpToFixedFrame(centerCartesian3)
@@ -70,6 +70,7 @@ export const cesiumCartesian3ToThreePosition = (cartesian3: Cesium.Cartesian3, c
   const threePosition = new Vector3(threePositionCartesian3.x, threePositionCartesian3.z, -threePositionCartesian3.y)
   return threePosition
 }
+
 
 export const positionArrToGeoJSONPolygon = (positionArr: Cesium.Cartesian3[]) => {
   const coordinateArr = positionArr.map((position) => {
@@ -89,6 +90,7 @@ export const positionArrToGeoJSONPolygon = (positionArr: Cesium.Cartesian3[]) =>
     coordinates: [coordinateArr],
   }
 }
+
 
 export const getCenterPosition = (positionArr: Cesium.Cartesian3[]) => {
   const centerPoint = turfCenter(positionArrToGeoJSONPolygon(positionArr))
