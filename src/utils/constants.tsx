@@ -13,4 +13,4 @@ export const DEFAULT_CAMERA_DISTANCE = 100
 export const CAMERA_NEAR = 0.00001
 export const DPR_FACTOR = 1
 export const DEFAULT_TARGET_DISTANCE = 50
-export const SCENE_MODE: Cesium.SceneMode = Cesium.SceneMode.COLUMBUS_VIEW
+export const SCENE_MODE: Cesium.SceneMode = Cesium.SceneMode.SCENE3D
