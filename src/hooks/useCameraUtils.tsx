@@ -140,7 +140,6 @@ export const useCameraUtils = () => {
               const newCenterColumbus = resiumCamera.positionWC.clone()
               newCenterColumbus.z += 100
               setCenterColumbus(newCenterColumbus)
-              resiumViewer.zoomTo(centerEntity, {heading: 0, pitch: -Math.PI / 4, range: 0})
             })
           }
         }
