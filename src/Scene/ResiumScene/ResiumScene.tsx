@@ -1,5 +1,6 @@
 import * as Cesium from 'cesium'
 import * as Resium from 'resium'
+import {SCENE_MODE} from '../../utils/constants'
 import {ResiumViewCube} from './ResiumViewCube'
 import {ResiumWorld} from './ResiumWorld'
 
@@ -42,7 +43,7 @@ export const ResiumScene = ({
         projectionPicker={false}
         blurActiveElementOnCanvasFocus={false}
         requestRenderMode={false}
-        sceneMode={Cesium.SceneMode.SCENE3D}
+        sceneMode={SCENE_MODE}
         terrainProvider={terrainProvider}
       >
         <ResiumWorld
