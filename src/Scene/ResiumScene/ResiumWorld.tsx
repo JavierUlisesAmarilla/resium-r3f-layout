@@ -33,6 +33,10 @@ export const ResiumWorld = ({
         enableLook={false}
         inertiaZoom={0}
       />
+      <Resium.Entity
+        id='center'
+        point={{pixelSize: 0}}
+      />
       <Resium.Cesium3DTileset
         url={tilesetUrl}
         projectTo2D

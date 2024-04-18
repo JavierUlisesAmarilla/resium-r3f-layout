@@ -26,6 +26,7 @@ export const useCameraUtils = () => {
     centerColumbus, setCenterColumbus,
     isResiumCameraBeingUsed, setIsResiumCameraBeingUsed,
     isR3fCameraInSync, setIsR3fCameraInSync,
+    tileset,
   } = useZustand()
   const {navigationMode} = useControls(controls)
   const resiumScene = resiumViewer?.scene
@@ -91,27 +92,24 @@ export const useCameraUtils = () => {
       const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
       const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
       const range = r3fControls.getDistance()
-
-      if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
-        const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
-        resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
-      } else if (SCENE_MODE === Cesium.SceneMode.COLUMBUS_VIEW) {
-        //
-      }
+      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
+      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
     }
   }, [centerCartesian3, navigationMode, r3fControls, resiumCamera, resiumScene, syncFieldOfView])
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3) {
+    if (resiumViewer && resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3 && tileset) {
       syncFieldOfView()
+      const canvasRect = resiumScene.canvas.getBoundingClientRect()
+      pickCartesian2.x = canvasRect.width / 2
+      pickCartesian2.y = canvasRect.height / 2
+      const pickCartesian3 = new Cesium.Cartesian3()
+      resiumScene.pickPosition(pickCartesian2, pickCartesian3)
 
       if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
-        const canvasRect = resiumScene.canvas.getBoundingClientRect()
-        pickCartesian2.x = canvasRect.width / 2
-        pickCartesian2.y = canvasRect.height / 2
-        const pickCartesian3 = new Cesium.Cartesian3()
-        resiumScene.pickPosition(pickCartesian2, pickCartesian3)
+        const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
+        r3fCamera.position.copy(r3fCameraPosition)
 
         if (pickCartesian3.equals(Cesium.Cartesian3.ZERO)) {
           const resiumCameraDirection = new Cesium.Cartesian3()
@@ -119,19 +117,31 @@ export const useCameraUtils = () => {
           Cesium.Cartesian3.add(resiumCamera.positionWC, resiumCameraDirection, pickCartesian3)
         }
 
-        const r3fCameraPosition = cesiumCartesian3ToThreePosition(resiumCamera.positionWC, centerCartesian3)
-        r3fCamera.position.copy(r3fCameraPosition)
         const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
         r3fControls.target.copy(targetPosition)
       } else if (SCENE_MODE === Cesium.SceneMode.COLUMBUS_VIEW) {
         if (centerColumbus) {
           const r3fCameraPosition = cesiumColumbusToThreePosition(resiumCamera.positionWC, centerColumbus)
           r3fCamera.position.copy(r3fCameraPosition)
-          const r3fCameraDirection = cesiumColumbusDirectionToThreeDirection(resiumCamera.directionWC)
-          const targetPosition = r3fCameraPosition.clone().add(r3fCameraDirection)
-          r3fControls.target.copy(targetPosition)
+
+          if (pickCartesian3.equals(Cesium.Cartesian3.ZERO)) {
+            const r3fCameraDirection = cesiumColumbusDirectionToThreeDirection(resiumCamera.directionWC)
+            const r3fCameraTarget = r3fCameraPosition.clone().add(r3fCameraDirection.multiplyScalar(DEFAULT_TARGET_DISTANCE))
+            r3fControls.target.copy(r3fCameraTarget)
+          } else {
+            const targetPosition = cesiumCartesian3ToThreePosition(pickCartesian3, centerCartesian3)
+            r3fControls.target.copy(targetPosition)
+          }
         } else {
-          setCenterColumbus(resiumCamera.positionWC.clone())
+          const centerEntity = resiumViewer.entities.getById('center')
+
+          if (centerEntity) {
+            resiumViewer.zoomTo(centerEntity, new Cesium.HeadingPitchRange(0, 0, 0)).then(() => {
+              const newCenterColumbus = resiumCamera.positionWC.clone()
+              newCenterColumbus.z += 100
+              setCenterColumbus(newCenterColumbus)
+            })
+          }
         }
       }
 
@@ -139,7 +149,7 @@ export const useCameraUtils = () => {
         setIsR3fCameraInSync(true)
       }
     }
-  }, [centerCartesian3, centerColumbus, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, setCenterColumbus, setIsR3fCameraInSync, syncFieldOfView])
+  }, [centerCartesian3, centerColumbus, isR3fCameraInSync, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, resiumViewer, setCenterColumbus, setIsR3fCameraInSync, syncFieldOfView, tileset])
 
   // Make r3f camera look at the given target smoothly with animation.
   const animateR3fLookAt = async (target: Vector3) => {
@@ -266,6 +276,16 @@ export const useCameraUtils = () => {
       }
     }
   }, [navigationMode, resiumScene, resiumViewer])
+
+  useEffect(() => {
+    if (resiumViewer && tileset) {
+      const centerEntity = resiumViewer.entities.getById('center')
+      if (centerEntity) {
+        // @ts-expect-error - TODO
+        centerEntity.position = tileset.boundingSphere.center
+      }
+    }
+  }, [resiumViewer, tileset])
 
   return {
     animateR3fLookAt,
