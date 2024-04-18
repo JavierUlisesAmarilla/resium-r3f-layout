@@ -2,6 +2,7 @@
 import {PerformanceMonitor} from '@react-three/drei'
 import {useThree} from '@react-three/fiber'
 import {AXES_LENGTH, DPR_FACTOR, SHOW_AXES_HELPER} from '../../utils/constants'
+import {R3fAssets} from './R3fAssets'
 
 
 export const R3fWorld = () => {
@@ -24,7 +25,7 @@ export const R3fWorld = () => {
         setDpr(0.5 * DPR_FACTOR)
       }}
     >
-      {/* <R3fAssets/> */}
+      <R3fAssets/>
       {SHOW_AXES_HELPER && <axesHelper args={[AXES_LENGTH]}/>}
     </PerformanceMonitor>
   )
