@@ -9,7 +9,7 @@ export type ResiumSlice = {
   tileset: Cesium.Cesium3DTileset | undefined
   setTileset: (tileset: Cesium.Cesium3DTileset) => void
 
-  centerCartesian3: Cesium.Cartesian3
+  centerCartesian3: Cesium.Cartesian3 | undefined
   setCenterCartesian3: (centerCartesian3: Cesium.Cartesian3) => void
 
   isResiumCameraBeingUsed: boolean
@@ -25,7 +25,7 @@ export const createResiumSlice: ZustandSlice<ResiumSlice> = (set) => {
     tileset: undefined,
     setTileset: (tileset) => set(() => ({tileset})),
 
-    centerCartesian3: Cesium.Cartesian3.ZERO,
+    centerCartesian3: undefined,
     setCenterCartesian3: (centerCartesian3) => set(() => ({centerCartesian3})),
 
     isResiumCameraBeingUsed: false,

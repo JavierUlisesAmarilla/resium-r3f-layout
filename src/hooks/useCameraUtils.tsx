@@ -85,7 +85,7 @@ export const useCameraUtils = () => {
 
   // Synchronize r3f camera to resium camera.
   const syncR3fToResium = useCallback(() => {
-    if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls') {
+    if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls' && centerCartesian3) {
       resiumScene.screenSpaceCameraController.enableInputs = false
       syncFieldOfView()
       const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
@@ -98,7 +98,7 @@ export const useCameraUtils = () => {
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
-    if (resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed)) {
+    if (resiumScene && resiumCamera && r3fControls && r3fCamera && (navigationMode === 'mapControls' || isResiumCameraBeingUsed) && centerCartesian3) {
       syncFieldOfView()
       const canvasRect = resiumScene.canvas.getBoundingClientRect()
       pickCartesian2.x = canvasRect.width / 2
