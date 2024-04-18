@@ -5,7 +5,7 @@ import {useControls} from 'leva'
 import {useCallback, useEffect} from 'react'
 import {Box3, MathUtils, Mesh, OrthographicCamera, PerspectiveCamera, Vector3} from 'three'
 import {useZustand} from '../store/useZustand'
-import {cesiumCartesian3ToThreePosition, cesiumColumbusDirectionToThreeDirection, cesiumColumbusToThreePosition, getAngle, getCenterPosition, normalizeAngle, threePositionToCesiumMatrix4} from '../utils/common'
+import {cesiumCartesian3ToThreePosition, cesiumColumbusDirectionToThreeDirection, cesiumColumbusToThreePosition, getAngle, getCenterPosition, normalizeAngle, threeDirectionToCesiumColumbusDirection, threePositionToCesiumColumbus, threePositionToCesiumMatrix4} from '../utils/common'
 import {ANGLE_TOLERANCE_FACTOR, ANIM_DURATION, AXES_LENGTH, CAMERA_NEAR, DEFAULT_CAMERA_DISTANCE, DEFAULT_TARGET_DISTANCE, ROT_ANIM_FACTOR, SCENE_MODE, SHOW_AXES_HELPER} from '../utils/constants'
 import {controls} from '../utils/controls'
 
@@ -86,16 +86,24 @@ export const useCameraUtils = () => {
 
   // Synchronize r3f camera to resium camera.
   const syncR3fToResium = useCallback(() => {
-    if (resiumScene && resiumCamera && r3fControls && navigationMode === 'orbitControls' && centerCartesian3 && !isResiumCameraBeingUsed) {
+    if (resiumScene && resiumCamera && r3fControls && r3fCamera && navigationMode === 'orbitControls' && centerCartesian3 && !isResiumCameraBeingUsed && centerColumbus) {
       resiumScene.screenSpaceCameraController.enableInputs = false
       syncFieldOfView()
-      const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
-      const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
-      const range = r3fControls.getDistance()
-      const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
-      resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
+
+      if (SCENE_MODE === Cesium.SceneMode.SCENE3D) {
+        const heading = normalizeAngle(-1 * r3fControls.getAzimuthalAngle())
+        const pitch = r3fControls.getPolarAngle() - MathUtils.degToRad(90)
+        const range = r3fControls.getDistance()
+        const resiumCameraTargetMatrix4 = threePositionToCesiumMatrix4(r3fControls.target, centerCartesian3)
+        resiumCamera.lookAtTransform(resiumCameraTargetMatrix4, new Cesium.HeadingPitchRange(heading, pitch, range))
+      } else if (SCENE_MODE === Cesium.SceneMode.COLUMBUS_VIEW) {
+        resiumCamera.position = threePositionToCesiumColumbus(r3fCamera.position, centerColumbus)
+        resiumCamera.direction = threeDirectionToCesiumColumbusDirection(r3fControls.target.clone().sub(r3fCamera.position))
+        resiumCamera.up = Cesium.Cartesian3.UNIT_Z.clone()
+        resiumCamera.right = Cesium.Cartesian3.UNIT_X.clone()
+      }
     }
-  }, [centerCartesian3, isResiumCameraBeingUsed, navigationMode, r3fControls, resiumCamera, resiumScene, syncFieldOfView])
+  }, [centerCartesian3, centerColumbus, isResiumCameraBeingUsed, navigationMode, r3fCamera, r3fControls, resiumCamera, resiumScene, syncFieldOfView])
 
   // Synchronize resium camera to r3f camera.
   const syncResiumToR3f = useCallback(() => {
