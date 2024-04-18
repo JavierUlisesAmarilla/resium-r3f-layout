@@ -65,25 +65,25 @@ export const ResiumViewCube = () => {
             id='side_w'
             className='side'
           >
-            <div onClick={() => flyResiumCameraToEntity(Math.PI / 2)}>W</div>
+            <div onClick={() => flyResiumCameraToEntity(Math.PI / 2, -Math.PI * 0.05)}>W</div>
           </div>
           <div
             id='side_s'
             className='side'
           >
-            <div onClick={() => flyResiumCameraToEntity()}>S</div>
+            <div onClick={() => flyResiumCameraToEntity(0, -Math.PI * 0.05)}>S</div>
           </div>
           <div
             id='side_e'
             className='side'
           >
-            <div onClick={() => flyResiumCameraToEntity(-Math.PI / 2)}>E</div>
+            <div onClick={() => flyResiumCameraToEntity(-Math.PI / 2, -Math.PI * 0.05)}>E</div>
           </div>
           <div
             id='side_n'
             className='side'
           >
-            <div onClick={() => flyResiumCameraToEntity(Math.PI)}>N</div>
+            <div onClick={() => flyResiumCameraToEntity(Math.PI, -Math.PI * 0.05)}>N</div>
           </div>
           <div
             id='side_b'
@@ -127,7 +127,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_ws'
             className='edge'
-            onClick={() => flyResiumCameraToEntity(Math.PI / 4)}
+            onClick={() => flyResiumCameraToEntity(Math.PI / 4, -Math.PI * 0.05)}
           >
             <div/>
             <div/>
@@ -135,7 +135,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_se'
             className='edge'
-            onClick={() => flyResiumCameraToEntity(-Math.PI / 4)}
+            onClick={() => flyResiumCameraToEntity(-Math.PI / 4, -Math.PI * 0.05)}
           >
             <div/>
             <div/>
@@ -143,7 +143,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_en'
             className='edge'
-            onClick={() => flyResiumCameraToEntity(-3 * Math.PI / 4)}
+            onClick={() => flyResiumCameraToEntity(-3 * Math.PI / 4, -Math.PI * 0.05)}
           >
             <div/>
             <div/>
@@ -151,7 +151,7 @@ export const ResiumViewCube = () => {
           <div
             id='edge_nw'
             className='edge'
-            onClick={() => flyResiumCameraToEntity(3 * Math.PI / 4)}
+            onClick={() => flyResiumCameraToEntity(3 * Math.PI / 4, -Math.PI * 0.05)}
           >
             <div/>
             <div/>
