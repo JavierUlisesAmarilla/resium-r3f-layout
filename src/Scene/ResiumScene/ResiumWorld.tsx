@@ -3,7 +3,6 @@ import {useEffect} from 'react'
 import * as Resium from 'resium'
 import {useZustand} from '../../store/useZustand'
 import {clampTilesetToTerrain} from '../../utils/common'
-import {ResiumAnnotations} from './ResiumAnnotations'
 
 
 export const ResiumWorld = ({
@@ -52,7 +51,7 @@ export const ResiumWorld = ({
           console.log('ResiumWorld#Cesium3DTileset#onClick: target:', target)
         }}
       />
-      <ResiumAnnotations/>
+      {/* <ResiumAnnotations/> */}
     </>
   )
 }

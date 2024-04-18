@@ -273,9 +273,10 @@ export const useCameraUtils = () => {
         resiumViewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
       } else {
         resiumScene.screenSpaceCameraController.enableInputs = false
+        syncR3fToResium()
       }
     }
-  }, [navigationMode, resiumScene, resiumViewer])
+  }, [navigationMode, resiumScene, resiumViewer, syncR3fToResium])
 
   useEffect(() => {
     if (resiumViewer && tileset) {
