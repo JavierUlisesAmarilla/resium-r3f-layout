@@ -138,11 +138,9 @@ export const useCameraUtils = () => {
           const centerEntity = resiumViewer.entities.getById('center')
 
           if (centerEntity) {
-            resiumViewer.zoomTo(centerEntity, {heading: 0, pitch: 0, range: 0}).then(() => {
-              const newCenterColumbus = resiumCamera.position.clone()
-              newCenterColumbus.y += 100
-              setCenterColumbus(newCenterColumbus)
-            })
+            const newCenterColumbus = resiumCamera.position.clone()
+            newCenterColumbus.y += 100
+            setCenterColumbus(newCenterColumbus)
           }
         }
       }

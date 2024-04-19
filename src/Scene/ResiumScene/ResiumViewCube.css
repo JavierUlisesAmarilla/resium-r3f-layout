@@ -7,6 +7,8 @@
   --resium-view-cube-size: 50px;
   --resium-view-cube-quarter-size: 25px;
   --resium-view-cube-quarter-negative-size: -25px;
+  --resium-view-cube-edge-distance: 26px;
+  --resium-view-cube-edge-negative-distance: -26px;
   --resium-view-cube-edge-height: 10px;
   --resium-view-cube-edge-negative-height: -10px;
   --resium-view-cube-edge-half-height: 5px;
@@ -120,35 +122,35 @@
 }
 
 #edge_tw {
-  transform: translateX(-25.8px) rotateY(-90deg);
+  transform: translateX(var(--resium-view-cube-edge-negative-distance)) rotateY(-90deg);
 }
 
 #edge_ts {
-  transform: translateZ(var(--resium-view-cube-quarter-size));
+  transform: translateZ(var(--resium-view-cube-edge-distance));
 }
 
 #edge_te {
-  transform: translateX(var(--resium-view-cube-quarter-size)) rotateY(90deg);
+  transform: translateX(var(--resium-view-cube-edge-distance)) rotateY(90deg);
 }
 
 #edge_tn {
-  transform: translateZ(var(--resium-view-cube-quarter-negative-size)) rotateY(180deg);
+  transform: translateZ(var(--resium-view-cube-edge-negative-distance)) rotateY(180deg);
 }
 
 #edge_ws {
-  transform: translateX(-25.8px) translateY(var(--resium-view-cube-quarter-size)) translateZ(var(--resium-view-cube-quarter-size)) rotateZ(-90deg);
+  transform: translateX(var(--resium-view-cube-edge-negative-distance)) translateY(var(--resium-view-cube-edge-distance)) translateZ(var(--resium-view-cube-edge-distance)) rotateZ(-90deg);
 }
 
 #edge_se {
-  transform: translateX(var(--resium-view-cube-quarter-size)) translateY(var(--resium-view-cube-quarter-size)) translateZ(var(--resium-view-cube-quarter-size)) rotateZ(90deg);
+  transform: translateX(var(--resium-view-cube-edge-distance)) translateY(var(--resium-view-cube-edge-distance)) translateZ(var(--resium-view-cube-edge-distance)) rotateZ(90deg);
 }
 
 #edge_en {
-  transform: translateX(var(--resium-view-cube-quarter-size)) translateY(var(--resium-view-cube-quarter-size)) translateZ(var(--resium-view-cube-quarter-negative-size)) rotateX(90deg) rotateY(90deg);
+  transform: translateX(var(--resium-view-cube-edge-distance)) translateY(var(--resium-view-cube-edge-distance)) translateZ(var(--resium-view-cube-edge-negative-distance)) rotateX(90deg) rotateY(90deg);
 }
 
 #edge_nw {
-  transform: translateX(-25.8px) translateY(var(--resium-view-cube-quarter-size)) translateZ(var(--resium-view-cube-quarter-negative-size)) rotateZ(90deg) rotateX(180deg);
+  transform: translateX(var(--resium-view-cube-edge-negative-distance)) translateY(var(--resium-view-cube-edge-distance)) translateZ(var(--resium-view-cube-edge-negative-distance)) rotateZ(90deg) rotateX(180deg);
 }
 
 /* Vertices */
@@ -182,17 +184,17 @@
 }
 
 #vertex_tws {
-  transform: translateZ(var(--resium-view-cube-quarter-size));
+  transform: translateZ(var(--resium-view-cube-edge-distance));
 }
 
 #vertex_tse {
-  transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-quarter-size)) rotateY(90deg);
+  transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-edge-distance)) rotateY(90deg);
 }
 
 #vertex_ten {
-  transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-quarter-negative-size)) rotateY(180deg);
+  transform: translateX(var(--resium-view-cube-size)) translateZ(var(--resium-view-cube-edge-negative-distance)) rotateY(180deg);
 }
 
 #vertex_tnw {
-  transform: translateZ(var(--resium-view-cube-quarter-negative-size)) rotateY(-90deg);
+  transform: translateZ(var(--resium-view-cube-edge-negative-distance)) rotateY(-90deg);
 }

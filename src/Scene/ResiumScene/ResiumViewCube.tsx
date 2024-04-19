@@ -28,7 +28,7 @@ export const ResiumViewCube = () => {
         })
         break
       case Cesium.SceneMode.COLUMBUS_VIEW:
-        resiumViewer.zoomTo(tileset, new Cesium.HeadingPitchRange(heading, pitch, range)).then(() => {
+        resiumViewer.zoomTo(tileset, {heading, pitch, range}).then(() => {
           setIsResiumCameraBeingUsed(false)
         })
         break
