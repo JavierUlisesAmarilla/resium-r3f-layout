@@ -1,6 +1,6 @@
 {
-  "name": "resium-r3f",
-  "version": "0.0.0",
+  "name": "resium-r3f-layout",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
